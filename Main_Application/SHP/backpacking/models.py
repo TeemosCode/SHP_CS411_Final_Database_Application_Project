@@ -9,7 +9,7 @@ from django.db import models
 
 
 class Buser(models.Model):
-    userid = models.IntegerField(primary_key=True)
+    userid = models.AutoField(primary_key=True)
     open_match = models.IntegerField(blank=True, null=True)
     nickname = models.CharField(max_length=50, blank=True, null=True)
     info = models.CharField(max_length=500, blank=True, null=True)
@@ -22,6 +22,7 @@ class Buser(models.Model):
 
 
 class Bloghasphoto(models.Model):
+    hasphotoid = models.AutoField(primary_key=True)
     postid = models.ForeignKey('Blogpost', models.DO_NOTHING, db_column='postid')
     photoid = models.ForeignKey('Blogphoto', models.DO_NOTHING, db_column='photoid')
 
@@ -31,7 +32,7 @@ class Bloghasphoto(models.Model):
 
 
 class Blogphoto(models.Model):
-    photoid = models.IntegerField(primary_key=True)
+    photoid = models.AutoField(primary_key=True)
     photo_url = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
@@ -40,7 +41,7 @@ class Blogphoto(models.Model):
 
 
 class Blogpost(models.Model):
-    postid = models.IntegerField(primary_key=True)
+    postid = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     content = models.CharField(max_length=10000, blank=True, null=True)
     author = models.ForeignKey(Buser, models.DO_NOTHING, db_column='author', blank=True, null=True)
@@ -51,6 +52,7 @@ class Blogpost(models.Model):
 
 
 class Blogtag(models.Model):
+    blogtagid = models.AutoField(primary_key=True)
     postid = models.ForeignKey(Blogpost, models.DO_NOTHING, db_column='postid')
     tagid = models.ForeignKey('Tag', models.DO_NOTHING, db_column='tagid')
 
@@ -60,11 +62,12 @@ class Blogtag(models.Model):
 
 
 class Comment(models.Model):
-    commentid = models.IntegerField(primary_key=True)
+    commentid = models.AutoField(primary_key=True)
     comment_time = models.DateTimeField(blank=True, null=True)
     content = models.CharField(max_length=5000, blank=True, null=True)
-    postid = models.ForeignKey(Blogpost, models.DO_NOTHING, db_column='postid')
+    postid = models.ForeignKey(Blogpost, models.DO_NOTHING, db_column='postid', blank=True, null=True)
     userid = models.ForeignKey(Buser, models.DO_NOTHING, db_column='userid')
+    parentid = models.ForeignKey('self', models.DO_NOTHING, db_column='parentid', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -72,6 +75,7 @@ class Comment(models.Model):
 
 
 class Likepost(models.Model):
+    likeid = models.AutoField(primary_key=True)
     userid = models.ForeignKey(Buser, models.DO_NOTHING, db_column='userid')
     postid = models.ForeignKey(Blogpost, models.DO_NOTHING, db_column='postid')
 
@@ -80,17 +84,8 @@ class Likepost(models.Model):
         db_table = 'LikePost'
 
 
-class Reply(models.Model):
-    parentid = models.ForeignKey(Comment, models.DO_NOTHING, db_column='parentid')
-    commentid = models.ForeignKey(Comment, models.DO_NOTHING, db_column='commentid')
-
-    class Meta:
-        managed = False
-        db_table = 'Reply'
-
-
 class Tag(models.Model):
-    tagid = models.IntegerField(primary_key=True)
+    tagid = models.AutoField(primary_key=True)
     tag_name = models.CharField(max_length=50, blank=True, null=True)
     tag_type = models.CharField(max_length=50, blank=True, null=True)
 
@@ -100,7 +95,7 @@ class Tag(models.Model):
 
 
 class Travelinfo(models.Model):
-    travelinfo_id = models.IntegerField(primary_key=True)
+    travelinfo_id = models.AutoField(primary_key=True)
     activity = models.CharField(max_length=200, blank=True, null=True)
     budgetmax = models.IntegerField(db_column='budgetMax', blank=True, null=True)  # Field name made lowercase.
     budgetmin = models.IntegerField(db_column='budgetMin', blank=True, null=True)  # Field name made lowercase.
@@ -115,9 +110,120 @@ class Travelinfo(models.Model):
 
 
 class Usertag(models.Model):
+    usertagid = models.AutoField(primary_key=True)
     userid = models.ForeignKey(Buser, models.DO_NOTHING, db_column='userid')
     tagid = models.ForeignKey(Tag, models.DO_NOTHING, db_column='tagid')
 
     class Meta:
         managed = False
         db_table = 'UserTag'
+
+
+class AuthGroup(models.Model):
+    name = models.CharField(unique=True, max_length=80)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_group'
+
+
+class AuthGroupPermissions(models.Model):
+    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
+    permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_group_permissions'
+        unique_together = (('group', 'permission'),)
+
+
+class AuthPermission(models.Model):
+    name = models.CharField(max_length=255)
+    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
+    codename = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_permission'
+        unique_together = (('content_type', 'codename'),)
+
+
+class AuthUser(models.Model):
+    password = models.CharField(max_length=128)
+    last_login = models.DateTimeField(blank=True, null=True)
+    is_superuser = models.IntegerField()
+    username = models.CharField(unique=True, max_length=150)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=150)
+    email = models.CharField(max_length=254)
+    is_staff = models.IntegerField()
+    is_active = models.IntegerField()
+    date_joined = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user'
+
+
+class AuthUserGroups(models.Model):
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user_groups'
+        unique_together = (('user', 'group'),)
+
+
+class AuthUserUserPermissions(models.Model):
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'auth_user_user_permissions'
+        unique_together = (('user', 'permission'),)
+
+
+class DjangoAdminLog(models.Model):
+    action_time = models.DateTimeField()
+    object_id = models.TextField(blank=True, null=True)
+    object_repr = models.CharField(max_length=200)
+    action_flag = models.PositiveSmallIntegerField()
+    change_message = models.TextField()
+    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'django_admin_log'
+
+
+class DjangoContentType(models.Model):
+    app_label = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'django_content_type'
+        unique_together = (('app_label', 'model'),)
+
+
+class DjangoMigrations(models.Model):
+    app = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    applied = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_migrations'
+
+
+class DjangoSession(models.Model):
+    session_key = models.CharField(primary_key=True, max_length=40)
+    session_data = models.TextField()
+    expire_date = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'django_session'

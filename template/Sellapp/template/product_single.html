@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<!--[if IE 6]>
+<html id="ie6" dir="ltr" lang="en-US">
+<![endif]-->
+<!--[if IE 7]>
+<html id="ie7" dir="ltr" lang="en-US">
+<![endif]-->
+<!--[if IE 8]>
+<html id="ie8" dir="ltr" lang="en-US">
+<![endif]-->
+<!--[if IE 9]>
+<html id="ie9" dir="ltr" lang="en-US">
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html dir="ltr" lang="en-US">
+<!--<![endif]-->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Sommerce Shop | The perfect e-commerce solution</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" media="all" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 980px)" href="css/lessthen980.css" />
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 600px)" href="css/lessthen600.css" />
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 480px)" href="css/lessthen480.css" />
+    <link rel="stylesheet" href="css/shop.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/prettyPhoto.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/tipsy.css" type="text/css" media="all" />
+    <link rel='stylesheet' href='css/jquery-rotating.css' type='text/css' media='all' />
+    <link rel='stylesheet' href='css/slider-cycle.css' type='text/css' media='all' />
+    
+    <!-- [favicon] begin -->
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!-- [favicon] end -->  
+    
+    <!-- FONT -->
+
+    
+    <!-- SCRIPTS -->
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery.prettyPhoto.js"></script>
+    <script type="text/javascript" src="js/jquery.tipsy.js"></script>
+    <script type="text/javascript" src="js/jquery.tweetable.js"></script>
+    <script type="text/javascript" src="js/jquery.nivo.slider.pack.js"></script>
+    <script type="text/javascript" src="js/jquery.cycle.min.js"></script>
+    <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+    <script type="text/javascript" src="js/comment-reply.js"></script>
+    <script type="text/javascript" src="js/BigInt.js"></script>  
+    <script type="text/javascript" src="js/Barrett.js"></script> 
+    <script type="text/javascript" src="js/RSA.js"></script>
+    <link rel="stylesheet" type="text/css" media="all" href="css/home.css" />
+
+    </head>
+    <body class="responsive boxed-layout no_js">
+        <!-- START LIGHT WRAPPER -->
+        <div class="bgLight group">
+            <!-- START WRAPPER -->
+            <div class="wrapper group">
+                <!-- START BG WRAPPER -->
+                <div class="bgWrapper group">
+                    <!-- START HEADER -->
+                    <div id="header" class="group">
+                        <!-- .inner -->
+                        <div class="inner group">
+                            <!-- START LOGO -->
+                            <div id="logo" class="group">
+                                <a href="/" title="Sommerce Shop"> 
+                                <span class="logo-title">Sommerce Shop</span>
+                                </a>         
+                                <p class="logo-description">The perfect e-commerce solution</p>
+                            </div>
+                            <!-- END LOGO -->        
+                            <!-- START LINKSBAR -->
+                             <ul id="linksbar" class="group">
+                                <li class="icon cart">
+                                    <a class="trigger" href="/mycart">
+                                    <span> My cart </span>
+                                    </a> | 
+                                    <div class="basketpopup">
+                                        <h3>My Cart</h3>
+                                        <span class="empty">No products in the cart.</span>
+                                    </div>
+                                </li>
+                                {% if user_flag %}
+                                <li>
+                                    <a>Hello {{ username }}</a> |
+                                </li>
+                                <li>
+                                    <a href="/logout">Logout</a> |
+                                </li>
+                                {% elif admin_flag %}
+                                <li>
+                                    <a>Hello {{ adminname }}</a> |
+                                </li>
+                                <li>
+                                    <a href="/logout">Logout</a> |
+                                </li>
+                                {% else %}
+                                <li>
+                                    <a href="/login">Login</a> |
+                                </li>
+                                <li>
+                                    <a href="/register">Register</a> |
+                                </li>
+                                {% endif %}
+                                <li><a href="contact.html">Contact us</a> | </li>
+                            </ul>
+                            <div class="copyrights">Collect from <a href="http://www.mycodes.net/"  title="网站模板">网站模板</a></div>
+                            <!-- END LINKSBAR -->  
+                            <div class="clear"></div>
+                            
+                                <!-- START NAV -->
+                                <div id="nav" class="group creative">
+                                   <ul id="menu-navigation" class="level-1">
+                                    
+                                        <li class="megamenu">
+                                            <a href="#">Shopping By</a>
+                                            <ul class="sub-menu">
+        
+                                                <li>
+                                                    <a href="categories.html">Categories</a>
+                                                    <ul class="sub-menu">
+                                                        {% for cata in catalist %}
+                                                        <li><a href="#">{{cata}}</a></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Prices</a>
+                                                    <ul class="sub-menu">
+                                                        <li><a href="#">100 &#8211; 200 &euro;</a></li>
+                                                        <li><a href="#">200 &#8211; 500 &euro;</a></li>
+                                                        <li><a href="#">500 &#8211; 800 &euro;</a></li>
+                                                        <li><a href="#">800 &#8211; 1000 &euro;</a></li>
+                                                        <li><a href="#">1000 &#8211; 1200 &euro;</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                         {% if admin_flag %}
+                                        <li>
+                                            <a>Modify</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="/editpro">Edit products</a></li>
+                                                <li><a href="/editaddress">Edit My Address</a></li>
+                                                <li><a href="order-tracking.html">Track your order</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a>Add</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="/addpro">Add products</a></li>
+                                        
+                                            </ul>
+                                        </li>
+                                        {% else %}
+                                        <li>
+                                            <a href="/my-account">My Account</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="/changepasswd">Change Password</a></li>
+                                                <li><a href="/editaddress">Edit My Address</a></li>
+                                                <li><a href="order-tracking.html">Track your order</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="/shop">Shop</a></li>
+                                        </li>
+                                        <li>
+                                            <a href="#">Pages</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="contact.html">Get in Touch</a></li>
+                                                
+                                            </ul>
+                                        </li>
+                                       
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                                <!-- END NAV -->
+                                
+                                <!-- START SEARCH FORM -->  
+                                <form role="search" method="post" id="searchform"  class="group">
+                                <div><label class="screen-reader-text" for="s">search</label>
+                                    <input type="text" value="" name="s" id="s" />
+                                    <input type="submit" id="searchsubmit" value="&gt;" name="submit"/>    
+                                    <input type="hidden" name="post_type" value="product" />
+                                </div>
+                                </form>
+                                <!-- END SEARCH FORM -->
+                            
+                            </div>
+                            <!-- end .inner -->  
+                             
+                        </div>
+                        <!-- END HEADER --> 
+
+
+<!-- START PRIMARY SECTION -->
+<div id="primary" class="inner group" />
+<div class="layout-sidebar-no group">
+   <div id="container">
+      <div id="content" role="main">
+         
+         <div id="breadcrumb">
+            <a class="home" href="/">Home</a>  &rsaquo; 
+            <a href="#">Categories</a> &rsaquo; 
+             <a href="#">{{goodskind}}</a> &rsaquo; {{goodsname}}
+        </div>
+         
+         <div class="product type-product status-publish hentry">
+            
+            <div class="images">
+                <a href="{{picture}}_big.jpg" class="zoom" rel="prettyphoto[gallery]">
+                    <img width="530" height="345" src="{{picture}}_big.jpg" class="attachment-530x345 wp-post-image" alt="originalparquet_001_big" title="originalparquet_001_big" />
+                </a>
+               
+                <div class="thumbnails">
+                    <a href="{{picture}}_small1.jpg" title="albatros_niwa_001_big" rel="prettyphoto[gallery]" class="zoom first">
+                        <img width="77" height="60" src="{{picture}}_small19090.jpg" class="attachment-90x90" alt="albatros_niwa_001_big" title="albatros_niwa_001_big" />
+                    </a>
+                    
+                    <a href="{{picture}}_small2.jpg" title="palaceliving_002_big" rel="prettyphoto[gallery]" class="zoom ">
+                        <img width="77" height="60" src="{{picture}}_small29090.jpg" class="attachment-90x90" alt="palaceliving_002_big" title="palaceliving_002_big" />
+                    </a>
+                </div>
+                <span class="onsale">Sale!</span>
+            </div>
+            
+            <div class="summary">
+               <h1 class="product_title page-title">{{goodsname}}</h1>
+               <p class="price"><del>&#36;1,000.00</del> <ins>&#36;{{price}}</ins></p>
+               <p>
+                    {{info}}
+                </p>
+              
+               <form action="" class="cart" method="post">
+                  <div class="quantity"><input name="quantity" value="" size="4" title="Qty" class="input-text qty text" maxlength="12" placeholder="1"/></div>
+                  <button type="submit" class="button-alt" name="{{goodsID}}_add" >Add to cart</button>
+                  <input type="hidden" id="_n" name="_n" value="a93bb4a4c2" /><input type="hidden" name="_wp_http_referer" value="/demo/sommerce/shop/gold-mahibo/" />		
+               </form>
+             
+                <div class="product_meta"><span class="sku">Stock:{{stockQua}}</span></div>
+               <div class="product_meta"><span class="sku">SKU: 27.</span> <span class="posted_in">Posted in <a href="#" rel="tag">{{goodskind}}</a>.</span></div>
+            </div>
+            <div id="product-tabs">
+               <ul class="tabs">
+                  <li class="active"><a href="#related-products">Related Products</a></li>
+                  <li><a href="#tab-description">Description</a></li>
+               </ul>
+            <!--
+            <script>
+            function gid_encrypt(a)
+            {   
+                var rsa_key = new RSAKeyPair("10001","","94b8c162b498f08d139461950b4f3851");
+                var str = new Array();
+                str = a.href.split("/");
+                var enc_gid = encryptedString(rsa_key,str[str.length - 1]);
+                a.setAttribute("href","/proinfo/"+ enc_gid);
+                a.href="/proinfo/"+enc_gid;
+                //alert(a.href);
+            }
+            </script>
+            -->
+            <div class="containers">
+                  <div class="panel" id="related-products">
+                     <div class="related products">
+                        <ul class="products">
+                             {%for pro in good_list%}
+                           <li class="product border shadow last-row">
+                              <a  href="/proinfo/{{pro.GoodsID}}">
+                                 <div class="thumbnail">
+                                    <img width="150" height="150" src="{{pro.Picture}}.jpg" class="attachment-shop_small wp-post-image" alt="001" title="001" />    			
+                                    <div class="thumb-shadow"></div>
+                                    <strong class="below-thumb">{{pro.Goodsname}}</strong>
+                                 </div>
+                                 <span class="price">&#36;{{pro.Price}}</span>		
+                              </a>
+                              <div class="buttons">
+                                 <a href="/proinfo/{{pro.GoodsID}}"  class="details">DETAILS</a>
+                              </div>
+                           </li>
+                           {% endfor %}
+                        </ul>
+                        <div class="clear"></div>
+                     </div>
+                  </div>
+            
+                  <div class="panel" id="tab-description">
+                     <p>{{good.Info}}</p>
+                  </div>
+                  <div class="panel" id="tab-attributes">
+                     <h2>Additional Information</h2>
+                  </div>
+                  <div class="panel" id="tab-reviews"></div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- END PRIMARY SECTION -->
+<!-- START NEWSLETTER FORM -->
+                    <div id="newsletter-form" class="group">
+                        <div class="inner">
+                            <div class="newsletter-section group">
+                                <p class="description special-font"><strong>Stay Updated:</strong> subscribe our special newsletter</p>
+                                <form method="post" action="#">
+                                    <fieldset>
+                                        <ul class="group">
+                                            <li><label for="fullname">Your name</label><input type="text" name="fullname" id="fullname" class="name-field text-field autoclear" /></li>
+                                            <li><label for="email">Your email</label><input type="text" name="email" id="email" class="email-field text-field autoclear" /></li>
+                                            <li><input type="submit" value="Subscribe" class="submit-field" /></li>
+                                        </ul>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ENDSTART NEWSLETTER FORM -->
+                    <!-- START FOOTER -->
+                    <div id="footer" class="group footer-sidebar-right columns-3">
+                        <div class="inner">
+                            <div class="footer-main">
+                                <div id="nav_menu-3" class="widget-1 widget-first widget widget_nav_menu">
+                                    <h3>Categories</h3>
+                                    <div class="menu-categories-footer-container">
+                                        <ul id="menu-categories-footer" class="menu">
+                                            <li><a href="#">Kitchen</a></li>
+                                            <li><a href="#">Bedroom</a></li>
+                                            <li><a href="#">Garden</a></li>
+                                            <li><a href="#">Bathroom</a></li>
+                                            <li><a href="#">Wood</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="nav_menu-4" class="widget-2 widget widget_nav_menu">
+                                    <h3>Utilities</h3>
+                                    <div class="menu-utilities-container">
+                                        <ul id="menu-utilities" class="menu">
+                                            <li><a href="testimonials.html">Testimonial</a></li>
+                                            <li><a href="faq.html">FAQ</a></li>
+                                            <li><a href="blog.html">Blog</a></li>
+                                            <li><a href="contact.html">Get in Touch</a></li>
+                                            <li><a href="#">Privacy Policy</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="nav_menu-5" class="widget-3 widget-last widget widget_nav_menu">
+                                    <h3>Get in touch</h3>
+                                    <div class="menu-get-in-touch-container">
+                                        <ul id="menu-get-in-touch" class="menu">
+                                            <li><a href="#">Newsletter</a></li>
+                                            <li><a href="http://www.facebook.com">Facebook</a></li>
+                                            <li><a href="http://twitter.com">Twitter</a></li>
+                                            <li><a href="blog.html">Blog</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="footer-sidebar">
+                                <div id="recent-posts-3" class="widget-1 widget-first widget recent-posts">
+                                    <h3>Last News</h3>
+                                    <div class="recent-post group">
+                                        <div class="hentry-post group">
+                                            <a href="article.html" title="-50% on all vintage glasses, enjoy it" class="title">-50% on all vintage glasses, enjoy it</a>
+                                            <p>Phasellus gravida augue sit amet leo dapibus a congue velit [...]</p>
+                                        </div>
+                                        <div class="hentry-post group">
+                                            <a href="article.html" title="Sommerce &ndash; a beautiful ecommerce solution" class="title">Sommerce &#8211; a beautiful ecommerce solution</a>
+                                            <p>Etiam semper magna sit amet augue blandit vel cursus erat [...]</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END FOOTER -->
+                    <!-- START COPYRIGHT -->
+                    <div id="copyright" class="group two-columns">
+                        <div class="inner group">
+                            <p class="left">
+                                <img src="images/logo1.png" alt="" /> 
+                                <span style="padding-left:10px;">
+                                    <img src="images/credit-cards/paypal.png" alt="paypal" style="margin-right:8px" />
+                                    <img src="images/credit-cards/visa.png" alt="visa" style="margin-right:8px" />
+                                    <img src="images/credit-cards/mastercard.png" alt="mastercard" style="margin-right:8px" />
+                                    <img src="images/credit-cards/cirrus.png" alt="cirrus" style="margin-right:8px" />
+                                    <img src="images/credit-cards/amex.png" alt="amex" style="margin-right:8px" />
+                                    <img src="images/credit-cards/bank-check.png" alt="bank-check" style="margin-right:8px" />
+                                    <img src="images/credit-cards/discover.png" alt="discover" style="margin-right:8px" />
+                                </span>        			            
+                            </p>
+                            <p class="right">
+                                Collect from <a href="http://www.mycodes.net/" title="源码之家" target="_blank">源码之家</a>  
+                            </p>
+                        </div>
+                    </div>
+                    <!-- END COPYRIGHT -->          
+                </div>
+                <!-- END BG WRAPPER --> 	      
+            </div>
+            <!-- END WRAPPER --> 	 	      
+        </div>
+        <!-- END LIGHT WRAPPER --> 
+        <script type="text/javascript" src="js/jquery.custom.js"></script>
+        <script type="text/javascript" src="js/contact.js"></script>
+        
+
+</body>
+</html>

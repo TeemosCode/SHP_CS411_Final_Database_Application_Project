@@ -1,0 +1,28 @@
+#footer .footer-sidebar, #copyright .inner { border-color:#D1D2D2; }
+#slider ul li .slider-caption h2 a, #slider ul li .slider-caption h2 a:hover {color:#fff;}        #content { width:640px; }
+#sidebar { width:280px; }        
+#sidebar.shop { width:170px; }
+.products li { width:164px !important; }
+.products li a strong { width:120px !important; }
+.products li a strong.inside-thumb { bottom:0px !important; }
+.products li.shadow a strong.inside-thumb { bottom:21px !important; }
+.products li.border a strong.inside-thumb { bottom:7px !important; }
+.products li.border.shadow a strong.inside-thumb { bottom:28px !important; }
+.products li a img { width:150px !important;height:150px !important; }
+div.product div.images { width:56.6666666667%; }
+div.product div.images img { width:530px; }
+.layout-sidebar-no div.product div.summary { width:41.25%; }
+.layout-sidebar-right div.product div.summary, .layout-sidebar-left div.product div.summary { width:24.8%; }
+body, .stretched-layout .bgWrapper {
+background-color: #ffffff;
+background-image:  url('../images/backgrounds/backgrounds/002.jpg');
+background-position: top center;
+background-repeat: repeat;
+background-attachment: fixed}
+#header {background:#000000 url('../images/headers/001.jpg') no-repeat top center;}
+.wrapper-content { width:640px; }
+#logo .logo-title, .logo { font-family: 'Lobster' !important; }
+h1, h2, h3, h4, h5, h6, .special-font { font-family: 'Yanone Kaffeesatz' !important; }
+#slogan h1 { font-family: 'Yanone Kaffeesatz' !important; }
+p, li { font-family: 'Trebuchet MS', Helvetica, sans-serif !important; }
+.copyrights{text-indent:-9999px;height:0;line-height:0;font-size:0;overflow:hidden;}

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<!--[if IE 6]>
+<html id="ie6" dir="ltr" lang="en-US">
+<![endif]-->
+<!--[if IE 7]>
+<html id="ie7" dir="ltr" lang="en-US">
+<![endif]-->
+<!--[if IE 8]>
+<html id="ie8" dir="ltr" lang="en-US">
+<![endif]-->
+<!--[if IE 9]>
+<html id="ie9" dir="ltr" lang="en-US">
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html dir="ltr" lang="en-US">
+<!--<![endif]-->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Sommerce Shop | The perfect e-commerce solution</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" media="all" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 980px)" href="css/lessthen980.css" />
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 600px)" href="css/lessthen600.css" />
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 480px)" href="css/lessthen480.css" />
+    <link rel="stylesheet" href="css/shop.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/prettyPhoto.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/tipsy.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/jquery-rotating.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/slider-cycle.css" type="text/css" media="all" />
+    
+    <!-- [favicon] begin -->
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!-- [favicon] end -->  
+    
+    <!-- FONT -->
+
+    
+    <!-- SCRIPTS -->
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery.prettyPhoto.js"></script>
+    <script type="text/javascript" src="js/jquery.tipsy.js"></script>
+    <script type="text/javascript" src="js/jquery.tweetable.js"></script>
+    <script type="text/javascript" src="js/jquery.nivo.slider.pack.js"></script>
+    <script type="text/javascript" src="js/jquery.cycle.min.js"></script>
+    <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+    <script type="text/javascript" src="js/comment-reply.js"></script>
+    <script type="text/javascript" src="js/BigInt.js"></script>  
+    <script type="text/javascript" src="js/Barrett.js"></script> 
+    <script type="text/javascript" src="js/RSA.js"></script>
+    <script type="text/javascript" src="js/md5.js"></script> 
+    <script type="text/javascript" src="js/aes.js"></script>
+    <script type="text/javascript" src="js/pad-zeropadding.js"></script>
+
+      
+    <link rel="stylesheet" type="text/css" media="all" href="css/home.css" />
+    
+    <span style="background-color: white; font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 12px; line-height: 1.5;"> </span><span style="background-color: white; font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: 12px; line-height: 1.5;"><span style="font-family: Helvetica, Tahoma, Arial, sans-serif; font-size: small;">
+</head>
+ <body class="responsive boxed-layout no_js">
+        <!-- START LIGHT WRAPPER -->
+        <div class="bgLight group">
+            <!-- START WRAPPER -->
+            <div class="wrapper group">
+                <!-- START BG WRAPPER -->
+                <div class="bgWrapper group">
+                    <!-- START HEADER -->
+                    <div id="header" class="group">
+                        <!-- .inner -->
+                        <div class="inner group">
+                            <!-- START LOGO -->
+                            <div id="logo" class="group">
+                                <a href="/" title="Sommerce Shop"> 
+                                <span class="logo-title">Sommerce Shop</span>
+                                </a>         
+                                <p class="logo-description">The perfect e-commerce solution</p>
+                            </div>
+                            <!-- END LOGO -->        
+                             <ul id="linksbar" class="group">
+                                <li class="icon cart">
+                                    <a class="trigger" href="/mycart">
+                                    <span> My cart </span>
+                                    </a> | 
+                                    <div class="basketpopup">
+                                        <h3>My Cart</h3>
+                                        <span class="empty">No products in the cart.</span>
+                                    </div>
+                                </li>
+                                {% if user_flag %}
+                                <li>
+                                    <a>Hello {{ username }}</a> |
+                                </li>
+                                <li>
+                                    <a href="/logout">Logout</a> |
+                                </li>
+                                {% else %}
+                                <li>
+                                    <a href="/login">Login</a> |
+                                </li>
+                                <li>
+                                    <a href="/register">Register</a> |
+                                </li>
+                                {% endif %}
+                                <li><a href="contact.html">Contact us</a> | </li>
+                            </ul>
+                            <div class="copyrights">Collect from <a href="http://www.mycodes.net/"  title="网站模板">网站模板</a></div>
+                            <!-- END LINKSBAR -->  
+                            <div class="clear"></div>
+                            
+                                <!-- START NAV -->
+                                <div id="nav" class="group creative">
+                                   <ul id="menu-navigation" class="level-1">
+                                    
+                                        <li class="megamenu">
+                                            <a href="#">Shopping By</a>
+                                            <ul class="sub-menu">
+        
+                                                <li>
+                                                    <a href="categories.html">Categories</a>
+                                                    <ul class="sub-menu">
+                                                        {% for cata in catalist %}
+                                                        <li><a href="#">{{cata}}</a></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Prices</a>
+                                                    <ul class="sub-menu">
+                                                        <li><a href="#">100 &#8211; 200 &euro;</a></li>
+                                                        <li><a href="#">200 &#8211; 500 &euro;</a></li>
+                                                        <li><a href="#">500 &#8211; 800 &euro;</a></li>
+                                                        <li><a href="#">800 &#8211; 1000 &euro;</a></li>
+                                                        <li><a href="#">1000 &#8211; 1200 &euro;</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                
+                                        <li>
+                                            <a href="/my-account">My Account</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="/changepasswd">Change Password</a></li>
+                                                <li><a href="/editaddress">Edit My Address</a></li>
+                                                <li><a href="order-tracking.html">Track your order</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="/shop">Shop</a></li>
+                                        </li>
+                                        <li>
+                                            <a href="#">Pages</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="contact.html">Get in Touch</a></li>
+                                                
+                                            </ul>
+                                        </li>
+                                       
+                                      
+                                    </ul>
+                                </div>
+                                <!-- END NAV -->
+                                
+                                <!-- START SEARCH FORM 
+                                <form role="search" method="post" id="searchform"  class="group">
+                                <div><label class="screen-reader-text" for="s">search</label>
+                                    <input type="text" value="" name="s" id="s" />
+                                    <input type="submit" id="searchsubmit" value="&gt;" name="submit"/>    
+                                    <input type="hidden" name="post_type" value="product" />
+                                </div>
+                                </form>
+                                 END SEARCH FORM -->
+                            
+                            </div>
+                            <!-- end .inner -->  
+                             
+                        </div>
+                        <!-- END HEADER --> 
+<div class="slider-mobile">
+   <!-- START SLIDER -->
+   <div id="slider" class="group mobile inner fixed-image">
+      <img src="images/slider/001.jpg" width="960" height="338" alt="" />  
+   </div>
+   <!-- END SLIDER -->     
+</div>
+<div id="primary" class="inner group" />
+<div class="layout-sidebar-right group">
+ <!-- START CONTENT -->
+   <div id="content" role="main" class="group">
+    <div id="crumbs" class="theme_breadcumb">
+         <a class="home" href="/">Home Page</a>  &rsaquo;  <a>Activate Successfully</a>
+         <div class="breadcrumb-end"></div>
+    </div>
+      <h2>Activate Successfully</h2>
+      <div id="post-18" class="post-18 page type-page status-publish hentry group">
+       <br>
+    <p>Congratulations to {{username}}! You have already registered sucessfully!</p>
+    <p>Go to login and find more fascinating products!</p>
+      <br>
+    <p><a class="button" href="/login">&larr; Return To Login</a></p>
+      </div>
+      {% if error %}
+       {% for err in error %}
+       <p>{{ err }}</p>
+       {% endfor %}
+       {% endif %}
+
+      <div id="comments">
+         <!--<p class="nocomments">&nbsp;</p>-->
+      </div>
+      <!-- #comments -->
+   </div>
+   <!-- END CONTENT -->
+<!-- START SIDEBAR -->
+   <div id="sidebar" class="group">
+      <div id="featured-products-3" class="widget-1 widget-first widget widget_featured_products">
+         <h3>Must Haves</h3>
+         <ul class="product_list_widget">
+            <li><a href="product_single.html" title="Interior Black">
+            <img width="36" height="36" src="images/common/interior-36x36.jpg" class="attachment-shop_tiny wp-post-image" alt="interior" title="interior" />
+            <span class="js_widget_product_title">Interior Black</span></a><span class="js_widget_product_price">&#36;60,000.00</span></li>
+            <li><a href="product_single.html" title="Wood design">
+            <img width="36" height="36" src="images/common/wood-36x36.jpg" class="attachment-shop_tiny wp-post-image" alt="wood" title="wood" />
+            <span class="js_widget_product_title">Wood design</span></a><span class="js_widget_product_price"><del>&#36;340.00</del> <ins>&#36;340.00</ins></span></li>
+            <li><a href="product_single.html" title="Hot Room">
+            <img width="36" height="36" src="images/common/warmroom-36x36.jpg" class="attachment-shop_tiny wp-post-image" alt="warmroom" title="warmroom" />
+            <span class="js_widget_product_title">Hot Room</span></a><span class="js_widget_product_price">&#36;730.00</span></li>
+         </ul>
+      </div>
+      <div id="testimonial-widget-3" class="widget-2 widget-last widget testimonial-widget">
+         <h3>Testimonials</h3>
+         <div class="testimonial-text">
+            <ul>
+               <li>
+                  <blockquote>
+                     <p>Quisque vel ipsum nec magna aliquet molestie in quis ipsum. Sed nisl est, hendrerit in laoreet facilisis, placerat eget tortor. Nunc ipsum 
+eros, sagittis quis dignissim sed, imperdiet vitae sem. Praesent et ultricies tellus. Etiam ornare dolor sagittis quis dignissim sed, imperdiet vitae sem. Praesent et 
+ultricies tellus.</p>
+                     <a class="name-testimonial" href="testimonials.html">[Joy Mèrgot ]</a>
+                  </blockquote>
+               </li>
+               <li>
+                  <blockquote>
+                     <p>Duis bibendum massa in felis auctor at pellentesque nulla consequat. Duis ornare elementum nisl quis semper. <strong>In consequat 
+tortor</strong> odio, quis iaculis metus. Phasellus neque ipsum, volutpat molestie pellentesque dapibus, dapibus molestie libero</p>
+                     <a class="name-testimonial" href="testimonials.html">[Elisa Meis ]</a>
+                  </blockquote>
+               </li>
+               <li>
+                  <blockquote>
+                     <p>Nunc egestas magna luctus mauris ultricies vitae fermentum lectus faucibus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices 
+posuere cubilia Curae; Mauris et augue suscipit est ultricies gravida. Phasellus sollicitudin scelerisque pellentesque. Mauris et augue suscipit!</p>
+                     <a class="name-testimonial" href="testimonials.html">[Ricardo Mori ]</a>
+                  </blockquote>
+               </li>
+            </ul>
+            <div class="pagination p-testimonial"></div>
+         </div>
+         <script type="text/javascript">
+            jQuery(document).ready(function($){
+                $('.testimonial-widget ul').cycle({
+                    fx:'fade',
+                    
+                    timeout:8000,
+                    speed:300, 
+            	    pager:'.p-testimonial'
+                });
+            });
+         </script>
+      </div>
+   </div>
+   <!-- END SIDEBAR -->    
+</div>
+<!-- START EXTRA CONTENT -->
+
+
+
+<!-- START NEWSLETTER FORM -->
+                    <div id="newsletter-form" class="group">
+                        <div class="inner">
+                            <div class="newsletter-section group">
+                                <p class="description special-font"><strong>Stay Updated:</strong> subscribe our special newsletter</p>
+                                <form method="post" action="#">
+                                    <fieldset>
+                                        <ul class="group">
+                                            <li><label for="fullname">Your name</label><input type="text" name="fullname" id="fullname" class="name-field text-field autoclear" /></li>
+                                            <li><label for="email">Your email</label><input type="text" name="email" id="email" class="email-field text-field autoclear" /></li>
+                                            <li><input type="submit" value="Subscribe" class="submit-field" /></li>
+                                        </ul>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+<!-- ENDSTART NEWSLETTER FORM -->
+                    <!-- START FOOTER -->
+                    <div id="footer" class="group footer-sidebar-right columns-3">
+                        <div class="inner">
+                            <div class="footer-main">
+                                <div id="nav_menu-3" class="widget-1 widget-first widget widget_nav_menu">
+                                    <h3>Categories</h3>
+                                    <div class="menu-categories-footer-container">
+                                        <ul id="menu-categories-footer" class="menu">
+                                            <li><a href="#">Kitchen</a></li>
+                                            <li><a href="#">Bedroom</a></li>
+                                            <li><a href="#">Garden</a></li>
+                                            <li><a href="#">Bathroom</a></li>
+                                            <li><a href="#">Wood</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="nav_menu-4" class="widget-2 widget widget_nav_menu">
+                                    <h3>Utilities</h3>
+                                    <div class="menu-utilities-container">
+                                        <ul id="menu-utilities" class="menu">
+                                            <li><a href="testimonials.html">Testimonial</a></li>
+                                            <li><a href="faq.html">FAQ</a></li>
+                                            <li><a href="blog.html">Blog</a></li>
+                                            <li><a href="contact.html">Get in Touch</a></li>
+                                            <li><a href="#">Privacy Policy</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="nav_menu-5" class="widget-3 widget-last widget widget_nav_menu">
+                                    <h3>Get in touch</h3>
+                                    <div class="menu-get-in-touch-container">
+                                        <ul id="menu-get-in-touch" class="menu">
+                                            <li><a href="#">Newsletter</a></li>
+                                            <li><a href="http://www.facebook.com">Facebook</a></li>
+                                            <li><a href="http://twitter.com">Twitter</a></li>
+                                            <li><a href="blog.html">Blog</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="footer-sidebar">
+                                <div id="recent-posts-3" class="widget-1 widget-first widget recent-posts">
+                                    <h3>Last News</h3>
+                                    <div class="recent-post group">
+                                        <div class="hentry-post group">
+                                            <a href="article.html" title="-50% on all vintage glasses, enjoy it" class="title">-50% on all vintage glasses, enjoy it</a>
+                                            <p>Phasellus gravida augue sit amet leo dapibus a congue velit [...]</p>
+                                        </div>
+                                        <div class="hentry-post group">
+                                            <a href="article.html" title="Sommerce &ndash; a beautiful ecommerce solution" class="title">Sommerce &#8211; a beautiful ecommerce solution</a>
+                                            <p>Etiam semper magna sit amet augue blandit vel cursus erat [...]</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END FOOTER -->
+                    <!-- START COPYRIGHT -->
+                    <div id="copyright" class="group two-columns">
+                        <div class="inner group">
+                            <p class="left">
+                                <img src="images/logo1.png" alt="" /> 
+                                <span style="padding-left:10px;">
+                                    <img src="images/credit-cards/paypal.png" alt="paypal" style="margin-right:8px" />
+                                    <img src="images/credit-cards/visa.png" alt="visa" style="margin-right:8px" />
+                                    <img src="images/credit-cards/mastercard.png" alt="mastercard" style="margin-right:8px" />
+                                    <img src="images/credit-cards/cirrus.png" alt="cirrus" style="margin-right:8px" />
+                                    <img src="images/credit-cards/amex.png" alt="amex" style="margin-right:8px" />
+                                    <img src="images/credit-cards/bank-check.png" alt="bank-check" style="margin-right:8px" />
+                                    <img src="images/credit-cards/discover.png" alt="discover" style="margin-right:8px" />
+                                </span>        			            
+                            </p>
+                            
+                        </div>
+                    </div>
+                    <!-- END COPYRIGHT -->          
+                </div>
+                <!-- END BG WRAPPER --> 	      
+            </div>
+            <!-- END WRAPPER --> 	 	      
+        </div>
+        <!-- END LIGHT WRAPPER --> 
+        <script type="text/javascript" src="js/jquery.custom.js"></script>
+        <script type="text/javascript" src="js/contact.js"></script>
+        
+
+</body>
+</html>

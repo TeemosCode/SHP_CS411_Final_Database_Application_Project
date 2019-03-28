@@ -1,11 +1,10 @@
 from django.contrib import admin
-from .models import Bloghasphoto, Blogphoto, Blogpost, Blogtag, \
+from .models import Blogphoto, Blogpost, Blogtag, \
     Buser, Comment, Tag, Travelinfo, Likepost, Usertag
 
 # Register your models here.
 admin.site.register(Blogpost)
 admin.site.register(Blogphoto)
-admin.site.register(Bloghasphoto)
 admin.site.register(Blogtag)
 admin.site.register(Buser)
 admin.site.register(Comment)

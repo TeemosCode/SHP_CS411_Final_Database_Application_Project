@@ -31,4 +31,16 @@ deactivate
 
 
 
-Note: The SHP is the Django application empty skeleton with the 'backpacking' app set up thats all for now...
+
+NOTE: Do the following FLOW:
+    RUN THE DATABASE SQL SCRIPT LOCALLY TO CREATE UR DATABASE AND TABLES FIRST
+
+    MAKE SURE django is linked to your mysql database
+
+    THEN run "python manage.py inspectdb > models.py" -> A models.py will be created under your project. Move that to
+    the backpacking application and replace the original models.py
+
+    THEN RUN ("python manage.py migrate").
+    ADD application to settings and import and register all model classes to admin.py
+    (DO NOT USE "makemigrations"!!!!!)
+    THEN YOU SHOULD BE ABLE TO ACCESS AND CHANGE DATA USING ADMIN IN DJANGO!

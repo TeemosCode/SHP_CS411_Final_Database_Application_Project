@@ -144,7 +144,6 @@ class UpdateBlogPost(View):
 
     @csrf_exempt
     def post(self, request, post_id):
-<<<<<<< HEAD
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)  # Creates python dicts
         title = body['title']  # Access these data one by one
@@ -188,22 +187,6 @@ class UpdateBlogPost(View):
             dict({"status": "updated blogpost with post_id: '%s'" % post_id, "data": updated_blog_post_data})
             # dict({"status": "updated blogpost with post_id: '%s'" % post_id})
         )
-=======
-        body = request.body.decode('utf-8')
-        data = json.loads(body)
-        title = data['title']
-        content = data['content']
-        with connection.cursor() as cursor:
-            fetch_user_info_query = """
-                UPDATE BlogPost SET title = %s, content = %s
-                WHERE postid = %s
-            """
-            try:
-                cursor.execute(fetch_user_info_query, [title, content, post_id])
-            except:
-                return JsonResponse(dict({"status": "fail to update blogpost with post_id: '%s'" % post_id}))
-        return JsonResponse(dict({"status": "updated blogpost with post_id: '%s'" % post_id}))
->>>>>>> 4fa91cd8ee2c220d716340e321c12fb8cae3c2b4
 
 
 class DeleteBlogPost(View):

@@ -1,3 +1,5 @@
+# from django.core.serializers import json
+import json
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -126,11 +128,23 @@ class UpdateBlogPost(View):
 
     ### No use at the moment since post or get is defined by the events happening on the client side
     def get(self, request, post_id):
-        return JsonResponse(dict({"say":
-    "Created with GET cause I'm just useless at the moment since no one told me what method they will use on me...."}))
+        with connection.cursor() as cursor:
+            fetch_user_info_query = """
+                SELECT * FROM BlogPost
+                WHERE postid = %s
+            """
+            cursor.execute(fetch_user_info_query, [post_id])
+            row = cursor.fetchone()
+            columns = [col[0] for col in cursor.description]
+            dict_ans = dict(zip(columns, row))
+        return JsonResponse(dict_ans, safe=False)
+
+    #     return JsonResponse(dict({"say":
+    # "Created with GET cause I'm just useless at the moment since no one told me what method they will use on me...."}))
 
     @csrf_exempt
     def post(self, request, post_id):
+<<<<<<< HEAD
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)  # Creates python dicts
         title = body['title']  # Access these data one by one
@@ -174,32 +188,91 @@ class UpdateBlogPost(View):
             dict({"status": "updated blogpost with post_id: '%s'" % post_id, "data": updated_blog_post_data})
             # dict({"status": "updated blogpost with post_id: '%s'" % post_id})
         )
+=======
+        body = request.body.decode('utf-8')
+        data = json.loads(body)
+        title = data['title']
+        content = data['content']
+        with connection.cursor() as cursor:
+            fetch_user_info_query = """
+                UPDATE BlogPost SET title = %s, content = %s
+                WHERE postid = %s
+            """
+            try:
+                cursor.execute(fetch_user_info_query, [title, content, post_id])
+            except:
+                return JsonResponse(dict({"status": "fail to update blogpost with post_id: '%s'" % post_id}))
+        return JsonResponse(dict({"status": "updated blogpost with post_id: '%s'" % post_id}))
+>>>>>>> 4fa91cd8ee2c220d716340e321c12fb8cae3c2b4
 
 
 class DeleteBlogPost(View):
     ### No use at the moment since post or get is defined by the events happening on the client side
     def get(self, request, post_id):
-        return JsonResponse(dict({"say":
-    "Created with GET cause I'm just useless at the moment since no one told me what method they will use on me...."}))
+        with connection.cursor() as cursor:
+            fetch_user_info_query = """
+                SELECT * FROM BlogPost
+                WHERE postid = %s
+            """
+            cursor.execute(fetch_user_info_query, [post_id])
+            row = cursor.fetchone()
+            columns = [col[0] for col in cursor.description]
+            dict_ans = dict(zip(columns, row))
+        return JsonResponse(dict_ans, safe=False)
 
     def post(self, request, post_id):
-        return JsonResponse(dict({"status": "updated blogpost with post_id: '%s'" % post_id}))
+        with connection.cursor() as cursor:
+            fetch_user_info_query = """
+                DELETE FROM BlogPost
+                WHERE postid = %s
+            """
+            try:
+                cursor.execute(fetch_user_info_query, [post_id])
+            except:
+                return JsonResponse(dict({"status": "fail to delete blogpost with post_id: '%s'" % post_id}))
+        return JsonResponse(dict({"status": "deleted blogpost with post_id: '%s'" % post_id}))
 
 
 class SearchBlogPost(View):
     # Content or title
     def get(self, request, search_keyword):
-        return JsonResponse(dict({"status": "Got blogpost based on search_keyword: '%s'" % search_keyword}))
+        with connection.cursor() as cursor:
+            fetch_user_info_query = """
+                SELECT * FROM BlogPost
+                WHERE %s IN title OR %s IN content
+            """
+            cursor.execute(fetch_user_info_query, [search_keyword])
+            rows = cursor.fetchall()
+
+            columns = [col[0] for col in cursor.description]
+            dict_ans = [dict(zip(columns, row)) for row in rows]
+
+        return JsonResponse(dict_ans, safe=False)
 
 
 class LikeBlogPost(View):
     ### No use at the moment since post or get is defined by the events happening on the client side
-    def get(self, request):
-        return JsonResponse(dict({"say":
-    "Created with GET cause I'm just useless at the moment since no one told me what method they will use on me...."}))
+    # def get(self, request):
+    #
+    #     return JsonResponse(dict({"say":
+    # "Created with GET cause I'm just useless at the moment since no one told me what method they will use on me...."}))
 
-    def post(self):
-        return JsonResponse(dict({"status": "blablbalblabalalblablablablabla"}))
+    def post(self, request):
+        with connection.cursor() as cursor:
+            body = request.body.decode('utf-8')
+            data = json.loads(body)
+            postid = data['postid']
+            userid = data['userid']
+
+            fetch_user_info_query = """
+                INSERT INTO LikePost (postid, userid)
+                VALUES (%s, %s)
+            """
+            try:
+                cursor.execute(fetch_user_info_query, [postid, userid])
+            except:
+                return JsonResponse(dict({"status": "fail to like"}))
+        return JsonResponse(dict({"status": "like added"}))
 
 
 

@@ -1,6 +1,10 @@
 # General
 .DS_Store
 
-__pycache__/
 *.pyc
+*.log
+*.pot
+__pycache__/
+local_settings.py
 
+.idea

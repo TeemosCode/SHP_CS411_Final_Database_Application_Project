@@ -1,12 +1,15 @@
 # from django.core.serializers import json
 import json
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.http import JsonResponse, HttpResponse
+import json
 
 from django.db import connection
 
 
+from django.views.decorators.csrf import csrf_exempt # !!!!!
 
 """
 actions: (High level queries/posts/updates CRUD)
@@ -29,10 +32,10 @@ actions: (High level queries/posts/updates CRUD)
 
 
 class UserList(View):
-
+    """Get the total list of current users"""
     def get(self, request):
         with connection.cursor() as cursor:
-            fetch_user_list_query = "SELECT * FROM BUser"
+            fetch_user_list_query = "SELECT * FROM BUser;"
             cursor.execute(fetch_user_list_query)
             rows = cursor.fetchall()
             print(rows)
@@ -46,15 +49,16 @@ class UserList(View):
 
 
 class UserInfo(View):
-
+    """Get each individual user information based on user ID"""
     def get(self, request, pk):
         with connection.cursor() as cursor:
             fetch_user_info_query = """
                 SELECT * FROM BUser
-                WHERE userid = %s
+                WHERE userid = %s;
             """
             cursor.execute(fetch_user_info_query, [pk])
-            row = cursor.fetchone()
+            row = cursor.fetchone()  # Tuple containing values of the row (Just values though...)
+            print(row)
             columns = [col[0] for col in cursor.description]
             dict_ans = dict(zip(columns, row))
         return JsonResponse(dict_ans, safe=False)  # Setting safe to allow JsonResponse to respond with something other than a dictionary (dict()) object
@@ -62,12 +66,43 @@ class UserInfo(View):
 
 class CreateBlogPost(View):
     ### No use at the moment since post or get is defined by the events happening on the client side
+    """Source: https://stackoverflow.com/questions/41709347/django-csrf-exempt-not-working-in-class-view/41728627"""
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(CreateBlogPost, self).dispatch(*args, **kwargs)
+
     def get(self, request):
         return JsonResponse(dict({"say":
     "Created with GET cause I'm just useless at the moment since no one told me what method they will use on me...."}))
 
+    @csrf_exempt
     def post(self, request):
-        return JsonResponse(dict({"say":"Created with post"}))
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)  # Creates python dicts
+        title = body['title']  # Access these data one by one
+        content = body['content']
+        author = body['author']
+
+        # Check if post with the same title exists
+        with connection.cursor() as cursor:
+            get_blog_post_with_title = """
+                SELECT COUNT(*) FROM BlogPost
+                WHERE title = %s AND author = %s;
+            """
+            cursor.execute(get_blog_post_with_title, [title, author])
+            row = cursor.fetchone()
+            if row[0] > 0:
+                return JsonResponse(dict({"Message": "ERROR. Title already exists for author '%s'" % author, "data": {}}))
+
+        # If post title name is not duplicate for the author, create the new post
+        with connection.cursor() as cursor:
+            insert_new_blog_post = """
+                INSERT INTO BlogPost (title, content, author)
+                VALUES (%s, %s, %s);
+            """
+            cursor.execute(insert_new_blog_post, [title, content, author])
+
+        return JsonResponse(dict({"Message": "OK", "data": body}))
 
 
 class ListBlogPosts(View):

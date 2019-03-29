@@ -21,4 +21,5 @@ urlpatterns = [
     path('blogpost/update/<int:post_id>', UpdateBlogPost.as_view(), name="update_blogpost_urlpattern"),
     path('blogpost/delete/<int:post_id>', DeleteBlogPost.as_view(), name="delete_blogpost_urlpattern"),
     path('blogpost/search/<str:search_keyword>', SearchBlogPost.as_view(), name="search_blogpost_urlpattern"),
+    path('blogpost/likepost', LikeBlogPost.as_view(), name="like_blogpost_urlpattern"),
 ]

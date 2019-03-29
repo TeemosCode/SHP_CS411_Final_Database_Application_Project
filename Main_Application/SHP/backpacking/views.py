@@ -89,8 +89,11 @@ class CreateBlogPost(View):
             """
             cursor.execute(get_blog_post_with_title, [title, author])
             row = cursor.fetchone()
-            if row[0] > 0:
-                return JsonResponse(dict({"Message": "ERROR. Title already exists for author '%s'" % author, "data": {}}))
+
+        if row[0] > 0:
+            return JsonResponse(
+                dict({"Message": "ERROR. Title already exists for author '%s'" % author, "data": {}})
+            )
 
         # If post title name is not duplicate for the author, create the new post
         with connection.cursor() as cursor:
@@ -116,13 +119,61 @@ class ListUserBlogPosts(View):
 
 
 class UpdateBlogPost(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(UpdateBlogPost, self).dispatch(*args, **kwargs)
+
     ### No use at the moment since post or get is defined by the events happening on the client side
     def get(self, request, post_id):
         return JsonResponse(dict({"say":
     "Created with GET cause I'm just useless at the moment since no one told me what method they will use on me...."}))
 
+    @csrf_exempt
     def post(self, request, post_id):
-        return JsonResponse(dict({"status": "updated blogpost with post_id: '%s'" % post_id}))
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)  # Creates python dicts
+        title = body['title']  # Access these data one by one
+        content = body['content']
+        author = body['author']
+
+        # Check if post with the same post_id exists. If not cannot update.
+        with connection.cursor() as cursor:
+            get_blog_post_with_postid = """
+                SELECT COUNT(*) FROM BlogPost
+                WHERE postid = %s AND author = %s;
+            """
+            cursor.execute(get_blog_post_with_postid, [post_id, author])
+            row = cursor.fetchone()
+
+        if row[0] == 0:
+            return JsonResponse(
+                dict({"Message": "ERROR. Post with post_id: {%s} exists for author '%s'" % (post_id, author), "data": {}})
+            )
+
+        with connection.cursor() as cursor:
+            update_blog_post_with_post_id = """
+                UPDATE BlogPost
+                SET title = %s, content = %s
+                WHERE author = %s AND postid = %s;
+            """
+            cursor.execute(update_blog_post_with_post_id, [title, content, author, post_id])
+
+            # Query the updated blogpost data
+            query_updated_post_with_post_id = """
+                SELECT * FROM BlogPost
+                WHERE postid = %s;
+            """
+            cursor.execute(query_updated_post_with_post_id, [post_id])
+            row = cursor.fetchone()
+            columns = [col[0] for col in cursor.description]
+            updated_blog_post_data = dict(zip(columns, row))
+
+        # Return the updated_values of the updated BlogPost
+        return JsonResponse(
+            dict({"status": "updated blogpost with post_id: '%s'" % post_id, "data": updated_blog_post_data})
+            # dict({"status": "updated blogpost with post_id: '%s'" % post_id})
+        )
 
 
 class DeleteBlogPost(View):

@@ -14,7 +14,6 @@ class Buser(models.Model):
     nickname = models.CharField(max_length=50, blank=True, null=True)
     info = models.CharField(max_length=500, blank=True, null=True)
     profile_pic = models.CharField(max_length=200, blank=True, null=True)
-    travelinfo_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -43,7 +42,7 @@ class Blogpost(models.Model):
 
 
 class Blogtag(models.Model):
-    postid = models.ForeignKey(Blogpost, models.DO_NOTHING, db_column='postid', primary_key=True)
+    postid = models.ForeignKey(Blogpost, models.DO_NOTHING, db_column='postid')
     tagid = models.ForeignKey('Tag', models.DO_NOTHING, db_column='tagid')
 
     class Meta:
@@ -66,7 +65,7 @@ class Comment(models.Model):
 
 
 class Likepost(models.Model):
-    userid = models.ForeignKey(Buser, models.DO_NOTHING, db_column='userid', primary_key=True)
+    userid = models.ForeignKey(Buser, models.DO_NOTHING, db_column='userid')
     postid = models.ForeignKey(Blogpost, models.DO_NOTHING, db_column='postid')
 
     class Meta:
@@ -101,7 +100,7 @@ class Travelinfo(models.Model):
 
 
 class Usertag(models.Model):
-    userid = models.ForeignKey(Buser, models.DO_NOTHING, db_column='userid', primary_key=True)
+    userid = models.ForeignKey(Buser, models.DO_NOTHING, db_column='userid')
     tagid = models.ForeignKey(Tag, models.DO_NOTHING, db_column='tagid')
 
     class Meta:

@@ -17,6 +17,7 @@ postid int not null AUTO_INCREMENT,
 primary key (postid),
 title varchar(100),
 content varchar(10000),
+create_time datetime,
 author int,
 foreign key (author) references BUser(userid)
 on delete cascade

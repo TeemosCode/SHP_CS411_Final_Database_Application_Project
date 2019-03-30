@@ -9,7 +9,6 @@ open_match int,
 nickname varchar(50),
 info varchar(500),
 profile_pic varchar(200),
-travelinfo_id int
 );
 
 create table BlogPost(

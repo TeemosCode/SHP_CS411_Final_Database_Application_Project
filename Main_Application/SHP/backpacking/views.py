@@ -85,6 +85,7 @@ class CreateBlogPost(View):
         title = body['title']  # Access these data one by one
         content = body['content']
         author = body['author']
+        date = body['create_time']
 
         # Check if post with the same title exists
         with connection.cursor() as cursor:
@@ -104,10 +105,10 @@ class CreateBlogPost(View):
         # If post title name is not duplicate for the author, create the new post
         with connection.cursor() as cursor:
             insert_new_blog_post = """
-                INSERT INTO BlogPost (title, content, author)
-                VALUES (%s, %s, %s);
+                INSERT INTO BlogPost (title, content, author, create_time)
+                VALUES (%s, %s, %s, %s);
             """
-            cursor.execute(insert_new_blog_post, [title, content, author])
+            cursor.execute(insert_new_blog_post, [title, content, author, date])
 
         return JsonResponse(dict({"Message": "OK", "data": body}))
 
@@ -163,36 +164,36 @@ class UpdateBlogPost(View):
     # "Created with GET cause I'm just useless at the moment since no one told me what method they will use on me...."}))
 
     @csrf_exempt
-    def post(self, request, post_id):
+    def put(self, request, post_id):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)  # Creates python dicts
         title = body['title']  # Access these data one by one
         content = body['content']
-        author = body['author']
+        # author = body['author']
 
         # Check if post with the same post_id exists. If not cannot update.
         with connection.cursor() as cursor:
             get_blog_post_with_postid = """
                 SELECT COUNT(*) FROM BlogPost
-                WHERE postid = %s AND author = %s;
+                WHERE postid = %s;
             """
-            cursor.execute(get_blog_post_with_postid, [post_id, author])
+            cursor.execute(get_blog_post_with_postid, [post_id])
             row = cursor.fetchone()
 
         if row[0] == 0:
             return JsonResponse(
-                dict({"Message": "ERROR. Post with post_id: {%s} exists for author '%s'" % (
-                    post_id, author), "data": {}})
+                dict({"Message": "ERROR. No Post with post_id {%s} exists" % (
+                    post_id), "data": {}})
             )
 
         with connection.cursor() as cursor:
             update_blog_post_with_post_id = """
                 UPDATE BlogPost
                 SET title = %s, content = %s
-                WHERE author = %s AND postid = %s;
+                WHERE postid = %s;
             """
             cursor.execute(update_blog_post_with_post_id, [
-                           title, content, author, post_id])
+                           title, content, post_id])
 
             # Query the updated blogpost data
             query_updated_post_with_post_id = """
@@ -214,19 +215,19 @@ class UpdateBlogPost(View):
 
 class DeleteBlogPost(View):
     # No use at the moment since post or get is defined by the events happening on the client side
-    def get(self, request, post_id):
-        with connection.cursor() as cursor:
-            fetch_user_info_query = """
-                SELECT * FROM BlogPost
-                WHERE postid = %s
-            """
-            cursor.execute(fetch_user_info_query, [post_id])
-            row = cursor.fetchone()
-            columns = [col[0] for col in cursor.description]
-            dict_ans = dict(zip(columns, row))
-        return JsonResponse(dict_ans, safe=False)
+    # def get(self, request, post_id):
+    #     with connection.cursor() as cursor:
+    #         fetch_user_info_query = """
+    #             SELECT * FROM BlogPost
+    #             WHERE postid = %s
+    #         """
+    #         cursor.execute(fetch_user_info_query, [post_id])
+    #         row = cursor.fetchone()
+    #         columns = [col[0] for col in cursor.description]
+    #         dict_ans = dict(zip(columns, row))
+    #     return JsonResponse(dict_ans, safe=False)
 
-    def post(self, request, post_id):
+    def delete(self, request, post_id):
         with connection.cursor() as cursor:
             fetch_user_info_query = """
                 DELETE FROM BlogPost

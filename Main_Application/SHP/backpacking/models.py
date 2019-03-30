@@ -14,7 +14,6 @@ class Buser(models.Model):
     nickname = models.CharField(max_length=50, blank=True, null=True)
     info = models.CharField(max_length=500, blank=True, null=True)
     profile_pic = models.CharField(max_length=200, blank=True, null=True)
-    travelinfo_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -35,6 +34,7 @@ class Blogpost(models.Model):
     postid = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     content = models.CharField(max_length=10000, blank=True, null=True)
+    create_time = models.DateTimeField(blank=True, null=True)
     author = models.ForeignKey(Buser, models.DO_NOTHING, db_column='author', blank=True, null=True)
 
     class Meta:

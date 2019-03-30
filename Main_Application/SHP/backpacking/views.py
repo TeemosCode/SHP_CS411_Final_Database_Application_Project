@@ -9,7 +9,7 @@ import json
 from django.db import connection
 
 
-from django.views.decorators.csrf import csrf_exempt # !!!!!
+from django.views.decorators.csrf import csrf_exempt  # !!!!!
 
 """
 actions: (High level queries/posts/updates CRUD)
@@ -33,6 +33,7 @@ actions: (High level queries/posts/updates CRUD)
 
 class UserList(View):
     """Get the total list of current users"""
+
     def get(self, request):
         with connection.cursor() as cursor:
             fetch_user_list_query = "SELECT * FROM BUser;"
@@ -50,6 +51,7 @@ class UserList(View):
 
 class UserInfo(View):
     """Get each individual user information based on user ID"""
+
     def get(self, request, pk):
         with connection.cursor() as cursor:
             fetch_user_info_query = """
@@ -61,11 +63,12 @@ class UserInfo(View):
             print(row)
             columns = [col[0] for col in cursor.description]
             dict_ans = dict(zip(columns, row))
-        return JsonResponse(dict_ans, safe=False)  # Setting safe to allow JsonResponse to respond with something other than a dictionary (dict()) object
+        # Setting safe to allow JsonResponse to respond with something other than a dictionary (dict()) object
+        return JsonResponse(dict_ans, safe=False)
 
 
 class CreateBlogPost(View):
-    ### No use at the moment since post or get is defined by the events happening on the client side
+    # No use at the moment since post or get is defined by the events happening on the client side
     """Source: https://stackoverflow.com/questions/41709347/django-csrf-exempt-not-working-in-class-view/41728627"""
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
@@ -73,7 +76,7 @@ class CreateBlogPost(View):
 
     def get(self, request):
         return JsonResponse(dict({"say":
-    "Created with GET cause I'm just useless at the moment since no one told me what method they will use on me...."}))
+                                  "Created with GET cause I'm just useless at the moment since no one told me what method they will use on me...."}))
 
     @csrf_exempt
     def post(self, request):
@@ -94,7 +97,8 @@ class CreateBlogPost(View):
 
         if row[0] > 0:
             return JsonResponse(
-                dict({"Message": "ERROR. Title already exists for author '%s'" % author, "data": {}})
+                dict(
+                    {"Message": "ERROR. Title already exists for author '%s'" % author, "data": {}})
             )
 
         # If post title name is not duplicate for the author, create the new post
@@ -111,13 +115,29 @@ class CreateBlogPost(View):
 class ListBlogPosts(View):
 
     def get(self, request):
-        return JsonResponse(dict({"status": "Listing all blog posts"}))
+        with connection.cursor() as cursor:
+            fetch_user_list_query = "SELECT * FROM BlogPost;"
+            cursor.execute(fetch_user_list_query)
+            rows = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            dict_ans = [dict(zip(columns, row)) for row in rows]
+        return JsonResponse(dict_ans, safe=False)
 
 
 class ListUserBlogPosts(View):
 
     def get(self, request, user_id):
-        return JsonResponse(dict({"status": "Listing all blog posts for user_id: '%s'" % user_id}))
+        with connection.cursor() as cursor:
+            fetch_user_info_query = """
+                SELECT * FROM BlogPost
+                WHERE author = %s;
+            """
+            cursor.execute(fetch_user_info_query, [user_id])
+            rows = cursor.fetchall()  # Tuple containing values of the row (Just values though...)
+            columns = [col[0] for col in cursor.description]
+            dict_ans = [dict(zip(columns, row)) for row in rows]
+        # Setting safe to allow JsonResponse to respond with something other than a dictionary (dict()) object
+        return JsonResponse(dict_ans, safe=False)
 
 
 class UpdateBlogPost(View):
@@ -126,7 +146,7 @@ class UpdateBlogPost(View):
     def dispatch(self, *args, **kwargs):
         return super(UpdateBlogPost, self).dispatch(*args, **kwargs)
 
-    ### No use at the moment since post or get is defined by the events happening on the client side
+    # No use at the moment since post or get is defined by the events happening on the client side
     def get(self, request, post_id):
         with connection.cursor() as cursor:
             fetch_user_info_query = """
@@ -161,7 +181,8 @@ class UpdateBlogPost(View):
 
         if row[0] == 0:
             return JsonResponse(
-                dict({"Message": "ERROR. Post with post_id: {%s} exists for author '%s'" % (post_id, author), "data": {}})
+                dict({"Message": "ERROR. Post with post_id: {%s} exists for author '%s'" % (
+                    post_id, author), "data": {}})
             )
 
         with connection.cursor() as cursor:
@@ -170,7 +191,8 @@ class UpdateBlogPost(View):
                 SET title = %s, content = %s
                 WHERE author = %s AND postid = %s;
             """
-            cursor.execute(update_blog_post_with_post_id, [title, content, author, post_id])
+            cursor.execute(update_blog_post_with_post_id, [
+                           title, content, author, post_id])
 
             # Query the updated blogpost data
             query_updated_post_with_post_id = """
@@ -184,13 +206,14 @@ class UpdateBlogPost(View):
 
         # Return the updated_values of the updated BlogPost
         return JsonResponse(
-            dict({"status": "updated blogpost with post_id: '%s'" % post_id, "data": updated_blog_post_data})
+            dict({"status": "updated blogpost with post_id: '%s'" %
+                  post_id, "data": updated_blog_post_data})
             # dict({"status": "updated blogpost with post_id: '%s'" % post_id})
         )
 
 
 class DeleteBlogPost(View):
-    ### No use at the moment since post or get is defined by the events happening on the client side
+    # No use at the moment since post or get is defined by the events happening on the client side
     def get(self, request, post_id):
         with connection.cursor() as cursor:
             fetch_user_info_query = """
@@ -234,7 +257,7 @@ class SearchBlogPost(View):
 
 
 class LikeBlogPost(View):
-    ### No use at the moment since post or get is defined by the events happening on the client side
+    # No use at the moment since post or get is defined by the events happening on the client side
     # def get(self, request):
     #
     #     return JsonResponse(dict({"say":
@@ -256,6 +279,3 @@ class LikeBlogPost(View):
             except:
                 return JsonResponse(dict({"status": "fail to like"}))
         return JsonResponse(dict({"status": "like added"}))
-
-
-

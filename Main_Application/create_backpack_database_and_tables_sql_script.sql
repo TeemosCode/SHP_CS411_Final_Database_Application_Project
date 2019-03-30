@@ -8,7 +8,7 @@ primary key (userid),
 open_match int,
 nickname varchar(50),
 info varchar(500),
-profile_pic varchar(200),
+profile_pic varchar(200)
 );
 
 create table BlogPost(

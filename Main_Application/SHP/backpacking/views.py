@@ -1,5 +1,7 @@
-# from django.core.serializers import json
-import json
+from django.contrib.auth import login, authenticate
+from django.shortcuts import render, redirect
+from .forms import SignUpForm
+
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -7,7 +9,6 @@ from django.http import JsonResponse, HttpResponse
 import json
 
 from django.db import connection
-
 
 from django.views.decorators.csrf import csrf_exempt  # !!!!!
 
@@ -29,6 +30,33 @@ actions: (High level queries/posts/updates CRUD)
     6. post tags / posts with same tags (overlapping ?)
     
 """
+
+
+class Home(View):
+
+    def get(self, request):
+        return render(request, 'backpacking/home.html')
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            # Save the user info into Mysql Database
+
+
+            form.save()
+
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            print(f"User {username} signed up!")
+            user = authenticate(username=username, password=raw_password)
+
+            login(request, user)
+            return redirect('home_urlpattern')
+    else:
+        form = SignUpForm()
+    return render(request, 'backpacking/sign_up.html', {'form': form})
 
 
 class UserList(View):
@@ -86,6 +114,7 @@ class CreateBlogPost(View):
         content = body['content']
         author = body['author']
         date = body['create_time']
+         # [] Returns a list of TAGS??????!!!
 
         # Check if post with the same title exists
         with connection.cursor() as cursor:

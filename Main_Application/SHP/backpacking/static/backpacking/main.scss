@@ -1,0 +1,427 @@
+html, body {
+	/*background-color: #f4f4f4;*/
+	color: #555;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:16px;
+	line-height: 1.6em;
+	margin:0;
+	height: 100%;
+	scroll-behavior: smooth;
+}
+
+.container {
+	width:100%;
+	margin: 0;
+	overflow-x: auto;
+	background-color: #333;
+	z-index:1; 
+	padding: 10px 0;
+
+	position: fixed;
+	top: 0;
+}
+
+#main-header {
+	background-color: coral;
+	color: #fff;
+}
+
+#section0 {
+	font-size: 23px;
+}
+
+#navlists {
+	transtion:0.4s;
+}
+
+#navbar ul {
+	width: 80%;
+	padding: 0;
+	margin:0 auto;
+	overflow: auto;
+	list-style-type: none;
+	background-color: #333;
+
+}
+
+#navbar li :not(#section0){
+	float: right;
+}
+
+#section0 {
+	float: left;
+}
+
+#navbar li a {
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	display: block;
+	text-decoration: none;
+	border-radius: 15px ;
+}
+
+#navbar li a:hover {
+	background-color: #111;
+	cursor: pointer;
+}
+
+/** for debugging purpose of finding ghost element*/
+/** {
+  background: #000 !important;
+  color: #0f0 !important;
+  outline: solid #f00 1px !important;
+}
+*/
+
+
+.navbar_active {
+	background-color: #666; /* class for active navbar element to change the color */
+}
+
+#showcase {
+	background-image:url("assets/bgimg.JPG");
+	opacity: 0.8;
+	background-position: right bottom;
+	background-repeat: no-repeat;
+	background-attachment:fixed;
+	height:500px;
+	text-align: center;
+}
+
+
+#showcase h1 {
+	color:#fff;
+	font-size: 50px;
+	line-height: 1.6em;
+	box-sizing: border-box;
+	width: 80%;
+
+	padding-top: 150px;
+	text-align: center;
+}
+
+#aboutHeader {
+	margin: auto;
+}
+
+/*#main-footer {
+	background: #333;
+	color:#fff;
+	text-align: center;
+	padding:20px;
+	margin-top:40px;
+}
+*/
+
+
+
+#main_footer {
+/*	position: fixed;*/
+/*	left:0;*/
+/*	bottom: 0;*/
+	width: 100%;
+	background-color: #333;
+	color: white;
+	text-align: center;
+	padding-top: 10px;
+}
+
+
+
+/****slide show***/
+* {box-sizing:border-box}
+
+#slideshow h1 {
+	margin:0;
+	text-align: center;
+	background-color: #87bdd8; /* Will make it the same as the slides */
+	color: white;
+}
+
+.slideshow-container {
+  max-width: 100%;
+  position: relative;
+  margin: 0 0;
+  height: 450px;
+}
+
+/* Hide the images by default */
+.slides {
+  display: none; /* first slide be displayed first once javascript loads */
+  background-color: #87bdd8;
+}
+
+.slides img{
+  display: block;
+  margin: 0 auto;
+}
+
+.slide-content {
+	display: block;
+	text-align: center;
+	height: 450px; /* to be the same as the outer slideshow-container so it won't shrink weirdly */
+	overflow: auto;
+}
+
+.slide-content p {
+	margin: 0 auto;
+	width: 80%;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 16px;
+  color: blue;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
+
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
+  transition-duration: 0.1s;
+}
+
+
+/*** ABOUT CONTAINER ***/
+.about-container {
+  display: block;
+  margin: 0 auto;
+  height: 400px;
+  background-image:url("assets/bgimg.JPG");
+  background-position: right bottom;
+  background-repeat: no-repeat;
+  background-attachment:fixed;
+}
+
+.about-block{
+  float: left;
+  width: 33.3%;
+  padding: 9% 30px 7.5% 30px;
+  box-sizing: border-box;
+  text-align: center;
+  /*overflow: auto;*/
+  overflow: none;
+  height:100%;
+  text-shadow: 2px 2px 4px black;
+  box-sizing: border-box;
+}
+
+.about-block p {
+	text-align: justify;
+	text-align-last: center; /* give the text a center alignment as well. for the last line text */
+	display: inline-block;
+	box-sizing: border-box;
+	/*overflow: auto;*/
+}
+
+
+
+/* MODAL - ABOUT (Turning them into modal instead) */
+/* The Modal (background) */
+.modal {
+	display: none;
+	position: fixed;
+
+	z-index: 1;
+	left: 0;
+	top: 0;
+/*	translate: transform(-50%, -50%);*/
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.4);
+}
+
+.openModal {
+	padding: 0;
+	margin:0 auto;
+	overflow: auto;
+	list-style-type: none;
+	background-color: #333;
+
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	display: block;
+	text-decoration: none;
+	border-radius: 15px ;
+}
+
+.openModal:hover, #myBtn:hover {
+	/*background-color: #111;*/
+	cursor: pointer;
+	background-color: rgba(255,255,255,0.8);
+	color: black;
+	text-shadow: none;
+}
+
+#myBtn {
+	padding: 0;
+	margin:0 auto;
+	list-style-type: none;
+	/*background-color: #333;*/
+	background-color: rgba(0,0,0,0.35);
+	width: 15%;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	display: block;
+	text-decoration: none;
+	border-radius: 15px ;
+}
+
+
+
+/* Modal Content/Box */
+.modal-content {
+  /*background-color: #87bdd8;*/
+  background-color: rgba(0,0,0,0.2);
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.modal-close {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  border: 1px dotted white;
+  border-radius:15px;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+/* Video Block CSS */
+
+/* Style the video: 100% width and height to cover the entire window */
+
+.video-container {
+  max-width: 100%;
+  margin: 0 0;
+  height: 500px;
+  position: relative;
+}
+
+#myVideo {
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  object-fit: fill; /* fill up the parent div */
+  opacity: 0.65;
+}
+
+/* Add some content on top of the video/page */
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* vertically and horizontally center */
+  display: block;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.01);
+  width: 80%;
+  margin: 0 auto;
+  z-index:1;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+
+
+@-webkit-keyframes fade {
+  from {opacity: 0} 
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: 0} 
+  to {opacity: 1}
+}
+
+/*@keyframes slidein {
+  from {
+    margin-left: 100%;
+    width: 300%; 
+  }
+
+  to {
+    margin-left: 0%;
+    width: 100%;
+  }
+}
+*/
+
+.text-color-red {
+	color:red;
+}
+
+.text-color-white {
+	color:white;
+}
+
+
+/* Footer Block*/
+footer div {
+	float: left;
+	width: 25%;
+	padding-bottom: 15px;
+}
+
+footer div:nth-last-child(-n+4) h4 {
+	border-left:1px solid white;
+	height:100%;
+}
+
+
+
+@media screen and (max-width: 600px) {
+	#navbar {
+		padding: 15% 0 !important; /* Use !important to make sure that JavaScript doesn't override the padding on small screens */
+	}
+	#section0, #navbar li {
+		float: none;
+		width: 100%;
+	}
+	#navbar a {
+		width: 100%;
+	}
+	.about-block, .about-container, .about-block p {
+		width: 100%;
+		float: none;
+		overflow: auto;
+	}
+}

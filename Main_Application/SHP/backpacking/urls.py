@@ -8,10 +8,15 @@ from .views import (
     LikeBlogPost,
     ListBlogPosts,
     SearchBlogPost,
-    ListUserBlogPosts)
+    ListUserBlogPosts,
+    signup,
+    Home
+)
 
 urlpatterns = [
     # Path for users
+    path('', Home.as_view(), name="home_urlpattern"),
+    path('signup', signup, name="user_signup_urlpattern"),
     path('users/list', UserList.as_view(), name="user_list_urlpattern"),
     path('users/<int:pk>', UserInfo.as_view(), name="user_info_urlpattern"),
     # Path for blogpost

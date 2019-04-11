@@ -39,9 +39,6 @@ class Blogpost(models.Model):
     postid = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     content = models.CharField(max_length=10000, blank=True, null=True)
-<<<<<<< Updated upstream
-    author = models.ForeignKey(Buser, models.DO_NOTHING, db_column='author', blank=True, null=True)
-=======
     # create_time should be set to current time by default
     # refer to https://medium.com/django-musings/current-datetime-for-default-value-in-a-model-use-callables-85e092e68fa6
     # not update yet
@@ -51,7 +48,6 @@ class Blogpost(models.Model):
 
     def __str__(self):
         return "%s - %s" % (self.postid, self.title)
->>>>>>> Stashed changes
 
     class Meta:
         managed = False

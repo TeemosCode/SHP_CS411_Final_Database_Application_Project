@@ -41,14 +41,35 @@ class Home(View):
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
+
         if form.is_valid():
-            # Save the user info into Mysql Database
-
-
+            ##### I believe we gota change the database Buser Schema again...
             form.save()
+            cleaned_form_data = form.cleaned_data
+            username = cleaned_form_data.get('username')  # This thing is unique for django
+            raw_password = cleaned_form_data.get('password1')
+            nickname = cleaned_form_data.get("first_name") + cleaned_form_data.get("last_name")
+            # Save the user info into Mysql Database
+            with connection.cursor() as cursor:
+                initialize_user_query = """
+                    INSERT INTO BUser (open_match, nickname, info, profile_pic) 
+                    VALUES (%s, %s, %s, %s);
+                """
+                cursor.execute(initialize_user_query, [0, username, "", ""])
 
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
+                get_created_user_query = """
+                    SELECT userid FROM BUser
+                    WHERE nickname = %s;
+                """
+                cursor.execute(get_created_user_query, [username])
+                row = cursor.fetchone()  # row of size one with just the userid
+
+                initialize_user_travelInfo_query = """
+                    INSERT INTO Travelinfo (userid) 
+                    VALUES (%s);
+                """
+                cursor.execute(initialize_user_travelInfo_query, [row[0]])
+
             print(f"User {username} signed up!")
             user = authenticate(username=username, password=raw_password)
 

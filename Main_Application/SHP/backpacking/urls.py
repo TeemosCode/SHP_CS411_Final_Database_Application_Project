@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import (
     UserList,
     UserInfo,
@@ -14,6 +14,8 @@ from .views import (
 )
 
 urlpatterns = [
+    # Path for user authentication using django built-in auth app
+    path('accounts/', include('django.contrib.auth.urls')),
     # Path for users
     path('', Home.as_view(), name="home_urlpattern"),
     path('signup', signup, name="user_signup_urlpattern"),

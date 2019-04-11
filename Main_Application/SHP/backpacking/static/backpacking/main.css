@@ -295,6 +295,26 @@ html, body {
 	border-radius: 15px ;
 }
 
+/*#loginBtn:hover {*/
+	/*cursor: pointer;*/
+	/*background-color: rgba(255,255,255, 0.45);*/
+	/*color: black;*/
+/*}*/
+
+/*#loginBtn {*/
+	/*padding: 0;*/
+	/*margin:0 auto;*/
+	/*list-style-type: none;*/
+	/*!*background-color: #333;*!*/
+	/*background-color: rgba(0,0,0,0.8);*/
+	/*width: 15%;*/
+	/*color: white;*/
+	/*text-align: center;*/
+	/*padding: 14px 16px;*/
+	/*display: block;*/
+	/*text-decoration: none;*/
+	/*border-radius: 15px ;*/
+/*}*/
 
 
 /* Modal Content/Box */

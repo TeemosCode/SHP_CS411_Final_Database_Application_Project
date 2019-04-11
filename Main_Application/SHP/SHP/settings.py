@@ -138,3 +138,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
+
+# Redirect login to React frontend url...
+LOGIN_REDIRECT_URL = "/"  # Needs change!!!

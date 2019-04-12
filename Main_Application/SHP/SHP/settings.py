@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-from .password import PASSWORD
+try:
+    from .password import PASSWORD
+except ImportError:
+    PASSWORD = ''
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

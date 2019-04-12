@@ -155,8 +155,8 @@ class CreateBlogPost(View):
         if row[0] > 0:
             return JsonResponse(
                 dict(
-                    {"Message": "ERROR. Title already exists for author '%s'" % author, "data": {}}, status=405)
-            )
+                    {"Message": "ERROR. Title already exists for author '%s'" % author, "data": {}})
+                , status=405)
 
         # If post title name is not duplicate for the author, create the new post
         with connection.cursor() as cursor:
@@ -253,7 +253,8 @@ class UpdateBlogPost(View):
         if row[0] == 0:
             return JsonResponse(
                 dict({"Message": "ERROR. No Post with post_id {%s} exists" % (
-                    post_id), "data": {}}, status=404)
+                    post_id), "data": {}})
+                ,status=404
             )
 
         with connection.cursor() as cursor:
@@ -278,7 +279,7 @@ class UpdateBlogPost(View):
 
         # Return the updated_values of the updated BlogPost
         return JsonResponse(
-            dict({"status": "updated blogpost with post_id: '%s'" %
+            dict({"Message": "updated blogpost with post_id: '%s'" %
                   post_id, "data": updated_blog_post_data})
             # dict({"status": "updated blogpost with post_id: '%s'" % post_id})
         )
@@ -307,8 +308,8 @@ class DeleteBlogPost(View):
             try:
                 cursor.execute(fetch_user_info_query, [post_id])
             except:
-                return JsonResponse(dict({"status": "fail to delete blogpost with post_id: '%s'" % post_id}), status=500)
-        return JsonResponse(dict({"status": "deleted blogpost with post_id: '%s'" % post_id}))
+                return JsonResponse(dict({"Message": "fail to delete blogpost with post_id: '%s'" % post_id}), status=500)
+        return JsonResponse(dict({"Message": "deleted blogpost with post_id: '%s'" % post_id}))
 
 
 class SearchBlogPost(View):
@@ -349,8 +350,8 @@ class LikeBlogPost(View):
             try:
                 cursor.execute(fetch_user_info_query, [postid, userid])
             except:
-                return JsonResponse(dict({"status": "fail to like"}), status=500)
-        return JsonResponse(dict({"status": "like added"}))
+                return JsonResponse(dict({"Message": "fail to like"}), status=500)
+        return JsonResponse(dict({"Message": "like added"}))
 
 
 # class CreateTravelInfo(View):
@@ -455,7 +456,7 @@ class UpdateTravelInfo(View):
             dict_ans = dict(zip(columns, row))
 
         return JsonResponse(dict({
-            "status": "updated travelinfo of use_id: %s" % user_id,
+            "Message": "updated travelinfo of use_id: %s" % user_id,
             "data": dict_ans
         }))
 
@@ -563,7 +564,7 @@ class UpdateComment(View):
             dict_ans = dict(zip(columns, row))
 
         return JsonResponse(dict({
-            "status": "updated comment for commentid: %s" % comment_id,
+            "Message": "updated comment for commentid: %s" % comment_id,
             "data": dict_ans
         }))
 
@@ -578,10 +579,12 @@ class DeleteComment(View):
             cursor.execute(filter_user_query, [comment_id])
             row = cursor.fetchone()
             if row[0] != user_id:
-                return JsonResponse(dict({"Message": "The current user does not have the permission to delete the comment"}))
+                return JsonResponse(
+                    dict({"Message": "The current user does not have the permission to delete the comment"}),
+                        status=405)
             delete_comment_query = """
                 DELETE FROM Comment
                 WHERE commentid = %s
             """
             cursor.execute(delete_comment_query, [comment_id])
-        return JsonResponse(dict({"status": "deleted comment with comment_id: '%s'" % comment_id}))
+        return JsonResponse(dict({"Message": "deleted comment with comment_id: '%s'" % comment_id}))

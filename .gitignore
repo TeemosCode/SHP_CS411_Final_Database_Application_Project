@@ -6,5 +6,5 @@
 *.pot
 __pycache__/
 local_settings.py
-
+password.py
 .idea

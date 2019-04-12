@@ -155,7 +155,7 @@ class CreateBlogPost(View):
         if row[0] > 0:
             return JsonResponse(
                 dict(
-                    {"Message": "ERROR. Title already exists for author '%s'" % author, "data": {}})
+                    {"Message": "ERROR. Title already exists for author '%s'" % author, "data": {}}, status=405)
             )
 
         # If post title name is not duplicate for the author, create the new post
@@ -253,7 +253,7 @@ class UpdateBlogPost(View):
         if row[0] == 0:
             return JsonResponse(
                 dict({"Message": "ERROR. No Post with post_id {%s} exists" % (
-                    post_id), "data": {}})
+                    post_id), "data": {}}, status=404)
             )
 
         with connection.cursor() as cursor:
@@ -307,7 +307,7 @@ class DeleteBlogPost(View):
             try:
                 cursor.execute(fetch_user_info_query, [post_id])
             except:
-                return JsonResponse(dict({"status": "fail to delete blogpost with post_id: '%s'" % post_id}))
+                return JsonResponse(dict({"status": "fail to delete blogpost with post_id: '%s'" % post_id}), status=500)
         return JsonResponse(dict({"status": "deleted blogpost with post_id: '%s'" % post_id}))
 
 
@@ -349,7 +349,7 @@ class LikeBlogPost(View):
             try:
                 cursor.execute(fetch_user_info_query, [postid, userid])
             except:
-                return JsonResponse(dict({"status": "fail to like"}))
+                return JsonResponse(dict({"status": "fail to like"}), status=500)
         return JsonResponse(dict({"status": "like added"}))
 
 

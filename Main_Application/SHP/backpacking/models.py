@@ -11,9 +11,12 @@ from django.db import models
 class Buser(models.Model):
     userid = models.AutoField(primary_key=True)
     open_match = models.IntegerField(blank=True, null=True)
-    nickname = models.CharField(max_length=50, blank=True, null=True)
-    info = models.CharField(max_length=500, blank=True, null=True)
+    username = models.CharField(unique=True, max_length=50, blank=True, null=True)
     profile_pic = models.CharField(max_length=200, blank=True, null=True)
+    firstname = models.CharField(max_length=50, blank=True, null=True)
+    lastname = models.CharField(max_length=50, blank=True, null=True)
+    email = models.CharField(max_length=50, blank=True, null=True)
+    info = models.CharField(max_length=10000, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -34,7 +37,7 @@ class Blogpost(models.Model):
     postid = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     content = models.CharField(max_length=10000, blank=True, null=True)
-    create_time = models.DateTimeField(blank=True, null=True)
+    create_time = models.DateTimeField()
     author = models.ForeignKey(Buser, models.DO_NOTHING, db_column='author', blank=True, null=True)
 
     class Meta:
@@ -77,12 +80,13 @@ class Likepost(models.Model):
 
 class Tag(models.Model):
     tagid = models.AutoField(primary_key=True)
-    tag_name = models.CharField(max_length=50, blank=True, null=True)
-    tag_type = models.CharField(max_length=50, blank=True, null=True)
+    tag_name = models.CharField(max_length=50)
+    tag_type = models.CharField(max_length=50)
 
     class Meta:
         managed = False
         db_table = 'Tag'
+        unique_together = (('tag_name', 'tag_type'),)
 
 
 class Travelinfo(models.Model):

@@ -43,23 +43,29 @@ def signup(request):
         form = SignUpForm(request.POST)
 
         if form.is_valid():
-            ##### I believe we gota change the database Buser Schema again...
-            form.save()
+
             cleaned_form_data = form.cleaned_data
             username = cleaned_form_data.get('username')  # This thing is unique for django
             raw_password = cleaned_form_data.get('password1')
-            nickname = cleaned_form_data.get("first_name") + cleaned_form_data.get("last_name")
+            first_name = cleaned_form_data.get("first_name")
+            last_name = cleaned_form_data.get("last_name")
+            email = cleaned_form_data.get("email")
+
             # Save the user info into Mysql Database
             with connection.cursor() as cursor:
                 initialize_user_query = """
-                    INSERT INTO BUser (open_match, nickname, info, profile_pic) 
-                    VALUES (%s, %s, %s, %s);
+                    INSERT INTO BUser (open_match, username, firstname, lastname, info, profile_pic, email) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s);
                 """
-                cursor.execute(initialize_user_query, [0, username, "", ""])
+                # """
+                #                     INSERT INTO BUser (open_match, nickname, info, profile_pic)
+                #                     VALUES (%s, %s, %s, %s);
+                #                 """
+                cursor.execute(initialize_user_query, [0, username, first_name, last_name, "", "", email])
 
                 get_created_user_query = """
                     SELECT userid FROM BUser
-                    WHERE nickname = %s;
+                    WHERE username = %s;
                 """
                 cursor.execute(get_created_user_query, [username])
                 row = cursor.fetchone()  # row of size one with just the userid
@@ -70,6 +76,7 @@ def signup(request):
                 """
                 cursor.execute(initialize_user_travelInfo_query, [row[0]])
 
+            form.save()
             print(f"User {username} signed up!")
             user = authenticate(username=username, password=raw_password)
 

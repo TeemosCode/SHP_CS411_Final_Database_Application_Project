@@ -20,8 +20,6 @@ pip install -r requirements.txt
 ===
 
 
-(There is a problem for me to setup mysqlclient package on my own mac, currrently I still have not found my way around it as it was pissing me off going through lots of posts and stuff and wasting my time. So instead I used mysql-connector-python. But I'm not sure if this would work if we were to really connect Django with MySQL. Need to further check this out...)
-
 
 To deactivate the virtual environment. Simply type the following command:
 
@@ -32,7 +30,7 @@ deactivate
 
 
 
-NOTE: Do the following FLOW:
+NOTE: Do the following work FLOW:
     RUN THE DATABASE SQL SCRIPT LOCALLY TO CREATE UR DATABASE AND TABLES FIRST
 
     MAKE SURE django is linked to your mysql database
@@ -41,6 +39,6 @@ NOTE: Do the following FLOW:
     the backpacking application and replace the original models.py
 
     THEN RUN ("python manage.py migrate").
-    ADD application to settings and import and register all model classes to admin.py
+    ADD application to settings then import and register all model classes to admin.py
     (DO NOT USE "makemigrations"!!!!!)
-    THEN YOU SHOULD BE ABLE TO ACCESS AND CHANGE DATA USING ADMIN IN DJANGO!
+    THEN YOU SHOULD BE ABLE TO ACCESS AND CHANGE DATA USING ADMIN IN DJANGO TO MYSQL DATABASE!

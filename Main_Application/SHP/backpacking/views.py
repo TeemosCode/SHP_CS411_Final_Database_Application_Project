@@ -487,10 +487,13 @@ class CreateComment(View):
                                   "just for test"}))
 
     @csrf_exempt
-    def post(self, request, user_id, parent_id, post_id):
+    def post(self, request):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         content = body["content"]
+        user_id = body['userid']
+        post_id = body['post_id']
+        parent_id = body['parent_id'] if body['parent_id'] != "None" else None  # None would be converted to NULL
 
         with connection.cursor() as cursor:
             create_comment_query = """

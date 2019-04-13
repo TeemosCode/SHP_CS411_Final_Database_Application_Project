@@ -48,7 +48,7 @@ urlpatterns = [
          name="update_travelinfo_urlpattern"),
     path('travelinfo/delete/<int:user_id>', DeleteTravelInfo.as_view(),
          name="delete_travelinfo_urlpattern"),
-    path('comment/create/<int:user_id>/<int:parent_id>/<int:post_id>', CreateComment.as_view(),
+    path('comment/create/', CreateComment.as_view(),
          name="create_comment_urlpattern"),
     path('comment/update/<int:user_id>/<int:comment_id>', UpdateComment.as_view(),
          name="update_comment_urlpattern"),

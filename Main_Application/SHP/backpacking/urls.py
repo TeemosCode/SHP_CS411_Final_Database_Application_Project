@@ -50,8 +50,8 @@ urlpatterns = [
          name="delete_travelinfo_urlpattern"),
     path('comment/create/', CreateComment.as_view(),
          name="create_comment_urlpattern"),
-    path('comment/update/<int:user_id>/<int:comment_id>', UpdateComment.as_view(),
+    path('comment/update/<int:comment_id>', UpdateComment.as_view(),
          name="update_comment_urlpattern"),
-    path('comment/delete/<int:user_id>/<int:comment_id>', DeleteComment.as_view(),
+    path('comment/delete/<int:comment_id>', DeleteComment.as_view(),
          name="delete_comment_urlpattern"),
 ]

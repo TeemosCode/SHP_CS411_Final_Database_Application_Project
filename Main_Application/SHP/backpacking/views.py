@@ -155,8 +155,7 @@ class CreateBlogPost(View):
         if row[0] > 0:
             return JsonResponse(
                 dict(
-                    {"Message": "ERROR. Title already exists for author '%s'" % author, "data": {}})
-                , status=405)
+                    {"Message": "ERROR. Title already exists for author '%s'" % author, "data": {}}), status=405)
 
         # If post title name is not duplicate for the author, create the new post
         with connection.cursor() as cursor:
@@ -253,8 +252,7 @@ class UpdateBlogPost(View):
         if row[0] == 0:
             return JsonResponse(
                 dict({"Message": "ERROR. No Post with post_id {%s} exists" % (
-                    post_id), "data": {}})
-                ,status=404
+                    post_id), "data": {}}), status=404
             )
 
         with connection.cursor() as cursor:
@@ -493,7 +491,8 @@ class CreateComment(View):
         content = body["content"]
         user_id = body['userid']
         post_id = body['post_id']
-        parent_id = body['parent_id'] if body['parent_id'] != "None" else None  # None would be converted to NULL
+        # None would be converted to NULL
+        parent_id = body['parent_id'] if body['parent_id'] != "None" else None
 
         with connection.cursor() as cursor:
             create_comment_query = """
@@ -527,7 +526,7 @@ class UpdateComment(View):
             row = cursor.fetchone()
         return row
 
-    def get(self, request, comment_id, user_id):
+    def get(self, request, comment_id):
         with connection.cursor() as cursor:
             fetch_comment_query = """ 
                 SELECT * FROM Comment
@@ -535,15 +534,15 @@ class UpdateComment(View):
             """
             cursor.execute(fetch_comment_query, [comment_id])
             row = cursor.fetchone()
-            print("row", row[4])
-            if row[4] != user_id:
-                return JsonResponse(dict({"Message": "The current user does not have the permission to update the comment"}))
+            # print("row", row[4])
+            # if row[4] != user_id:
+            #     return JsonResponse(dict({"Message": "The current user does not have the permission to update the comment"}))
             columns = [col[0] for col in cursor.description]
             dict_ans = dict(zip(columns, row))
         return JsonResponse(dict_ans, safe=False)
 
     @csrf_exempt
-    def put(self, request, comment_id, user_id):
+    def put(self, request, comment_id):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         row = self.get_object(comment_id)
@@ -573,18 +572,19 @@ class UpdateComment(View):
 
 
 class DeleteComment(View):
-    def delete(self, request, comment_id, user_id):
+    def delete(self, request, comment_id):
         with connection.cursor() as cursor:
-            filter_user_query = """
-                SELECT userid FROM Comment
-                WHERE commentid = %s
-            """
-            cursor.execute(filter_user_query, [comment_id])
-            row = cursor.fetchone()
-            if row[0] != user_id:
-                return JsonResponse(
-                    dict({"Message": "The current user does not have the permission to delete the comment"}),
-                        status=405)
+            # filter_user_query = """
+            #     SELECT userid FROM Comment
+            #     WHERE commentid = %s
+            # """
+            # cursor.execute(filter_user_query, [comment_id])
+            # row = cursor.fetchone()
+            # if row[0] != user_id:
+            #     return JsonResponse(
+            #         dict(
+            #             {"Message": "The current user does not have the permission to delete the comment"}),
+            #         status=405)
             delete_comment_query = """
                 DELETE FROM Comment
                 WHERE commentid = %s

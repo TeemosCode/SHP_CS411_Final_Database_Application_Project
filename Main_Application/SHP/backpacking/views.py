@@ -181,12 +181,30 @@ class ListBlogPosts(View):
         return JsonResponse(dict_ans, safe=False)
 
 
-class ListComments(View):
+class ListUserComments(View):
 
-    def get(self, request):
+    def get(self, request, user_id):
         with connection.cursor() as cursor:
-            fetch_user_list_query = "SELECT * FROM comment;"
-            cursor.execute(fetch_user_list_query)
+            fetch_user_comment_query = """
+            SELECT * FROM Comment
+            WHERE userid = %s
+            """
+            cursor.execute(fetch_user_comment_query, [user_id])
+            rows = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            dict_ans = [dict(zip(columns, row)) for row in rows]
+        return JsonResponse(dict_ans, safe=False)
+
+
+class ListUserLikes(View):
+
+    def get(self, request, user_id):
+        with connection.cursor() as cursor:
+            fetch_user_likes_query = """
+            SELECT * FROM Likepost
+            WHERE userid = %s
+            """
+            cursor.execute(fetch_user_likes_query, [user_id])
             rows = cursor.fetchall()
             columns = [col[0] for col in cursor.description]
             dict_ans = [dict(zip(columns, row)) for row in rows]

@@ -181,6 +181,30 @@ class ListBlogPosts(View):
         return JsonResponse(dict_ans, safe=False)
 
 
+class ListComments(View):
+
+    def get(self, request):
+        with connection.cursor() as cursor:
+            fetch_user_list_query = "SELECT * FROM comment;"
+            cursor.execute(fetch_user_list_query)
+            rows = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            dict_ans = [dict(zip(columns, row)) for row in rows]
+        return JsonResponse(dict_ans, safe=False)
+
+
+class ListPostComments(View):
+
+    def get(self, request, postid):
+        with connection.cursor() as cursor:
+            fetch_user_list_query = "SELECT * FROM comment WHERE postid = %s;"
+            cursor.execute(fetch_user_list_query, [postid])
+            rows = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            dict_ans = [dict(zip(columns, row)) for row in rows]
+        return JsonResponse(dict_ans, safe=False)
+
+
 class ListUserBlogPosts(View):
 
     def get(self, request, user_id):
@@ -350,6 +374,31 @@ class LikeBlogPost(View):
             except:
                 return JsonResponse(dict({"Message": "fail to like"}), status=500)
         return JsonResponse(dict({"Message": "like added"}))
+
+
+class DeleteLikePost(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(DeleteLikePost, self).dispatch(*args, **kwargs)
+
+    @csrf_exempt
+    def post(self, request):
+        with connection.cursor() as cursor:
+            body = request.body.decode('utf-8')
+            data = json.loads(body)
+            postid = data['postid']
+            userid = data['userid']
+
+            fetch_user_info_query = """
+                DELETE FROM LikePost
+                WHERE postid = %s AND userid = %s
+            """
+            try:
+                cursor.execute(fetch_user_info_query, [postid, userid])
+            except:
+                return JsonResponse(dict({"Message": "fail to delete like"}), status=500)
+        return JsonResponse(dict({"Message": "deleted like"}))
 
 
 # class CreateTravelInfo(View):

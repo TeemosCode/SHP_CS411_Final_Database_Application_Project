@@ -122,6 +122,12 @@ class FacebookSignup(View):
                                 VALUES (%s);
                             """
             cursor.execute(initialize_user_travelInfo_query, [row[0]])
+            return JsonResponse(dict(
+                {
+                    "Message": "User 'userid ({})' signed up with facebook".format(row[0]),
+                    "data": row[0]
+                }
+            ))
 
 
 class FacebookLogin(View):

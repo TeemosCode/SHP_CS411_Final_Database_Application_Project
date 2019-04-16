@@ -22,7 +22,12 @@ from .views import (
     ListUserComments,
     ListUserLikes,
     AddBlogTag,
-    AddUserTag, FacebookSignup, FacebookLogin)
+    AddUserTag, 
+    FacebookSignup, 
+    FacebookLogin,
+    DeleteUserTag, 
+    DeleteBlogTag,
+    Login)
 
 urlpatterns = [
     # Path for user authentication using django built-in auth app
@@ -30,6 +35,8 @@ urlpatterns = [
     # Path for users
     path('', Home.as_view(), name="home_urlpattern"),
     path('signup', signup, name="user_signup_urlpattern"),
+    path('loggedin', Login.as_view(), name="user_login_urlpattern"),
+    # url(r'^login/$','django.contrib.auth.views.login', {'template_name': '/login.html'}),
     path('facebook_signup', FacebookSignup.as_view(), name="user_facebook_signup_urlpattern"),
     path('facebook_login', FacebookLogin.as_view(), name="user_facebook_login_urlpattern"),
     path('users/list', UserList.as_view(), name="user_list_urlpattern"),
@@ -75,6 +82,10 @@ urlpatterns = [
 
     path('blogpost/<int:postid>/addtag', AddBlogTag.as_view(),
          name='add_blogtag_urlpattern'),
+    path('blogpost/<int:postid>/deletetag', DeleteBlogTag.as_view(),
+         name='add_blogtag_urlpattern'),
     path('users/<int:userid>/addtag', AddUserTag.as_view(),
+         name='add_usertag_urlpattern'),
+    path('users/<int:userid>/deletetag', DeleteUserTag.as_view(),
          name='add_usertag_urlpattern'),
 ]

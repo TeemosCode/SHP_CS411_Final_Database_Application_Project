@@ -88,6 +88,25 @@ def signup(request):
     return render(request, 'backpacking/sign_up.html', {'form': form})
 
 
+class Login(View):
+    """
+    If user logged in with Django authentication. Hardcode and redirect them to the react application Router (Define it later)
+    Then give it an argument with the logged in user id for next usage. (It can only be provied within the url though)
+    """
+    def get(self, request):
+        with connection.cursor() as cursor:
+
+            username = request.user
+            userid_query = """
+                SELECT userid FROM BUser
+                WHERE username = %s;
+            """
+            cursor.execute(userid_query, [username])
+            user_id = cursor.fetchone()[0]
+            print(user_id)
+            return redirect(f"https://backpack-ing.herokuapp.com/?user_id={user_id}")
+
+
 class FacebookSignup(View):
 
     def post(self, request):
@@ -136,7 +155,7 @@ class FacebookLogin(View):
     facebook provided user_id to keep the session info based on this user in our application.
     Returns json data with "userid" of our application userid in the database
     """
-    def post(self, request):
+    def get(self, request):
         with connection.cursor() as cursor:
             body = request.body.decode('utf-8')
             data = json.loads(body)
@@ -347,9 +366,6 @@ class UpdateBlogPost(View):
             dict_ans = dict(zip(columns, row))
         return JsonResponse(dict_ans, safe=False)
 
-    #     return JsonResponse(dict({"say":
-    # "Created with GET cause I'm just useless at the moment since no one told me what method they will use on me...."}))
-
     @csrf_exempt
     def put(self, request, post_id):
         body_unicode = request.body.decode('utf-8')
@@ -400,7 +416,6 @@ class UpdateBlogPost(View):
         return JsonResponse(
             dict({"Message": "updated blogpost with post_id: '%s'" %
                   post_id, "data": updated_blog_post_data})
-            # dict({"status": "updated blogpost with post_id: '%s'" % post_id})
         )
 
 
@@ -649,8 +664,7 @@ class CreateComment(View):
                 INSERT INTO comment(content, postid, userid, parentid)
                 VALUES (%s, %s, %s, %s);
             """
-            cursor.execute(create_comment_query, [
-                           content, post_id, user_id, parent_id])
+            cursor.execute(create_comment_query, [content, post_id, user_id, parent_id])
 
             return JsonResponse(dict({"Message": "OK", "data": body}))
 

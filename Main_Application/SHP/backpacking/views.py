@@ -787,6 +787,38 @@ class AddBlogTag(View):
         return JsonResponse(dict({"Message": "OK", "data": body}))
 
 
+class DeleteBlogTag(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(DeleteBlogTag, self).dispatch(*args, **kwargs)
+
+    @csrf_exempt
+    def post(self, request, postid):
+        with connection.cursor() as cursor:
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+            tag_name = body["tag_name"]
+            tag_type = body["tag_type"]
+
+            find_tag_query = """
+                SELECT tagid FROM Tag WHERE tag_name = %s AND tag_type = %s;
+            """
+
+            cursor.execute(find_tag_query, [tag_name, tag_type])
+            tagid = cursor.fetchone()
+
+            fetch_user_info_query = """
+                DELETE FROM BlogTag
+                WHERE postid = %s AND tagid = %s
+            """
+            try:
+                cursor.execute(fetch_user_info_query, [postid, tagid])
+            except:
+                return JsonResponse(dict({"Message": "fail to delete blogtag"}), status=500)
+        return JsonResponse(dict({"Message": "deleted blogtag"}))
+
+
 class AddUserTag(View):
 
     @method_decorator(csrf_exempt)
@@ -817,3 +849,33 @@ class AddUserTag(View):
         return JsonResponse(dict({"Message": "OK", "data": body}))
 
 
+class DeleteUserTag(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(DeleteUserTag, self).dispatch(*args, **kwargs)
+
+    @csrf_exempt
+    def post(self, request, userid):
+        with connection.cursor() as cursor:
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+            tag_name = body["tag_name"]
+            tag_type = body["tag_type"]
+
+            find_tag_query = """
+                SELECT tagid FROM Tag WHERE tag_name = %s AND tag_type = %s;
+            """
+
+            cursor.execute(find_tag_query, [tag_name, tag_type])
+            tagid = cursor.fetchone()
+
+            fetch_user_info_query = """
+                DELETE FROM UserTag
+                WHERE userid = %s AND tagid = %s
+            """
+            try:
+                cursor.execute(fetch_user_info_query, [userid, tagid])
+            except:
+                return JsonResponse(dict({"Message": "fail to delete usertag"}), status=500)
+        return JsonResponse(dict({"Message": "deleted usertag"}))

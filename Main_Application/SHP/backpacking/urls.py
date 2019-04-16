@@ -22,7 +22,11 @@ from .views import (
     ListUserComments,
     ListUserLikes,
     AddBlogTag,
-    AddUserTag, FacebookSignup, FacebookLogin, Login)
+    AddUserTag, 
+    FacebookSignup, 
+    FacebookLogin,
+    DeleteUserTag, 
+    DeleteBlogTag)
 
 urlpatterns = [
     # Path for user authentication using django built-in auth app
@@ -76,6 +80,10 @@ urlpatterns = [
 
     path('blogpost/<int:postid>/addtag', AddBlogTag.as_view(),
          name='add_blogtag_urlpattern'),
+    path('blogpost/<int:postid>/deletetag', DeleteBlogTag.as_view(),
+         name='add_blogtag_urlpattern'),
     path('users/<int:userid>/addtag', AddUserTag.as_view(),
+         name='add_usertag_urlpattern'),
+    path('users/<int:userid>/deletetag', DeleteUserTag.as_view(),
          name='add_usertag_urlpattern'),
 ]

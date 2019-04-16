@@ -1,189 +1,191 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
+{% extends 'base.html' %}
+{% load static %}
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+    <!--{% load static %}-->
 
-    <link rel = 'stylesheet' type='text/css' href="{% static 'backpacking/main.css' %}">.
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MP1 Starter</title>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<!--     <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script> -->
+    <!--<link rel = 'stylesheet' type='text/css' href="{% static 'backpacking/main.css' %}">.-->
+    <!--<meta charset="utf-8">-->
+    <!--<meta http-equiv="x-ua-compatible" content="ie=edge">-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <!--<title>MP1 Starter</title>-->
+    <!--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">-->
+<!--&lt;!&ndash;     <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script> &ndash;&gt;-->
 
-</head>
+<!--</head>-->
 
-<body>
-	<header>
-		<nav id="navbar">
-			<div class="container">
-				<ul id='navlists'>
+<!--<body>-->
+	<!--<header>-->
+		<!--<nav id="navbar">-->
+			<!--<div class="container">-->
+				<!--<ul id='navlists'>-->
 
-					<li><a id="section0" href="#showcase">BACKPACKING</a></li>
-					<li><a id='section1' href="#sign-up">SINGUP</a></li>
-					<li><a id='section2' href="#about">ABOUT</a></li>
-					<li><a id='section3' href="#slideshow">FEATURES</a></li>
+					<!--<li><a id="section0" href="#showcase">BACKPACKING</a></li>-->
+					<!--<li><a id='section1' href="#sign-up">SINGUP</a></li>-->
+					<!--<li><a id='section2' href="#about">ABOUT</a></li>-->
+					<!--<li><a id='section3' href="#slideshow">FEATURES</a></li>-->
 
-				</ul>
-			</div>
-		</nav>
-	</header>
-
-
-	<section id="showcase">
-		<div>
-			<h1 id="aboutHeader">BACKPACKING</h1>
-			<p class="text-color-red">A place to help you schedule your trips and finding the best backpacking buddies on earth. Literally!</p>
-            {% if user.is_authenticated %}
-				Hi {{ user.username }}
-				<a href="{% url 'logout' %}"><span id = "myBtn">Log OUT</span></a>
-			{% else %}
-				<a href="{% url 'login' %}"><span id = "myBtn">Log In</span></a>
-			{% endif %}
-		</div>
-	</section>
-
-	<section id='slideshow'>
-		<h1>Features</h1>
-		<div class="slideshow-container">
-			<div class="slides fade">
-
-				<div class='slide-content'>
-					<img src="https://drive.google.com/uc?export=download&id=16HhyLgApnn7QpD-O_NzOEzZMmHWHI3oe">
-					<h2>We Do it For YOU!</h2>
-					<p>Tired of searching through different websites looking at different feedbacks or blogposts for a certain spot you'd love to visit
-					for your trip? Getting overwhelmed by the abundant information out there back feeling powerless of where to start looking?
-					Hoping for a place that has those who have the similar taste in travel as you and hope to see what their experiences are like without
-					spending a lot of time to search for them?<br> Congratulations! BACKPACKING is here to help you! <br> All posts of travel experience by other
-					users would be saved on the system and filtered according to your interest. With just a few clicks of your fingers, you can have all those
-					information delivered in front of you in seconds. Oh, and did we mention we would be using AI to help you out in the long run?</p>
-				</div>
-			</div>
-
-			<div class="slides fade">
-
-				<div class='slide-content'>
-					<img src="https://drive.google.com/uc?export=download&id=1flAX8y2DCdKgsAm5apTrRcdt_sLTuw94">
-					<h2>We help you Find BUDDIES!</h2>
-					<p>Only posts?! NO! With our inbuilt profile search (That is if you are willing to open your profile to be public for other users to see or find
-						. We value your privacy as much as you do, so we give you the authority to decide how you want to use YOUR data!), you can find others who have
-						the same taste in travel experience, posts, destinations or even better - Same overlapping travel dates! Hooray!!! You might just found yourself
-						an awsome travel buddy. Don't hesitate to connect with your potential buddies, or friend for life using our InMailing in-time online chatroom! They
-						would also be those who are willing to make their profile public, meaning they would like to meet you as much as you would love to meet them <3
-					</p>
-				</div>
-			</div>
-
-			<div class="slides fade">
-
-				<div class='slide-content'>
-					<img src="https://drive.google.com/uc?export=download&id=1Iaap07lqHGtjk1bz8Sqriq7ZnJb91WnV">
-					<p>Finding info and others to travel with cannot be any easier than BACKPACKING!</p>
-					<p>What are you waiting for? Join us to begin finding the best travel experience of a life time!</p>
-				</div>
-			</div>
-
-			<!-- Next and previous buttons -->
-		  <a class="prev" id="leftArrow">&#10094;</a>
-		  <a class="next" id="rightArrow">&#10095;</a>
+				<!--</ul>-->
+			<!--</div>-->
+		<!--</nav>-->
+	<!--</header>-->
 
 
-		</div>
-	</section>
+	<!--<section id="showcase">-->
+		<!--<div>-->
+			<!--<h1 id="aboutHeader">BACKPACKING</h1>-->
+			<!--<p class="text-color-red">A place to help you schedule your trips and finding the best backpacking buddies on earth. Literally!</p>-->
+            <!--{% if user.is_authenticated %}-->
+				<!--Hi {{ user.username }}-->
+				<!--<a href="{% url 'logout' %}"><span id = "myBtn">Log OUT</span></a>-->
+			<!--{% else %}-->
+				<!--<a href="{% url 'login' %}"><span id = "myBtn">Log In</span></a>-->
+			<!--{% endif %}-->
+		<!--</div>-->
+	<!--</section>-->
 
-	<section id='about'>
-		<div class="about-container">
-			<div class='about-block'>
-				<i class="fas fa-search fa-5x"></i>
-				<h3 class="text-color-white">Nice & Easy</h3>
-				<button class="openModal"> See what's this about </button>
-				<div class="modal">
-					<div class="modal-content">
-						<span class="modal-close">&times;</span>
-						<p class="text-color-white">Tired of looking for travel information before leaving for your favorite distination?<br> Paddies
-						helps users quickly filter travel posts base on user's preference to find the right post from other travelers with the
-						same taste and interest. Paddies also indentifies users interest using AI and could give each user the best costomized
-					    search result for any future posts one would want to read before enjoying themselves on the next best travel experience</p>
-					</div>
-				</div>
+	<!--<section id='slideshow'>-->
+		<!--<h1>Features</h1>-->
+		<!--<div class="slideshow-container">-->
+			<!--<div class="slides fade">-->
 
-			</div>
+				<!--<div class='slide-content'>-->
+					<!--<img src="https://drive.google.com/uc?export=download&id=16HhyLgApnn7QpD-O_NzOEzZMmHWHI3oe">-->
+					<!--<h2>We Do it For YOU!</h2>-->
+					<!--<p>Tired of searching through different websites looking at different feedbacks or blogposts for a certain spot you'd love to visit-->
+					<!--for your trip? Getting overwhelmed by the abundant information out there back feeling powerless of where to start looking?-->
+					<!--Hoping for a place that has those who have the similar taste in travel as you and hope to see what their experiences are like without-->
+					<!--spending a lot of time to search for them?<br> Congratulations! BACKPACKING is here to help you! <br> All posts of travel experience by other-->
+					<!--users would be saved on the system and filtered according to your interest. With just a few clicks of your fingers, you can have all those-->
+					<!--information delivered in front of you in seconds. Oh, and did we mention we would be using AI to help you out in the long run?</p>-->
+				<!--</div>-->
+			<!--</div>-->
 
-			<div class='about-block'>
-				<i class="fas fa-users fa-5x"></i>
-				<h3 class="text-color-white">Search & Match</h3>
-				<button class="openModal"> See what's this about </button>
-				<div class="modal">
-					<div class="modal-content">
-						<span class="modal-close">&times;</span>
-						<p class="text-color-white">Not only does Paddies make searching for travel posts more simple, accurate and precise, we also provide users the ability to get connected with on another with our built in chat. Have any questions regarding a post? Send an system direct chat to the original poster or simply leave a comment for them to reply when they have the chance. What's more, everyone could search for travel buddies based on the same interest, destination and even time of travel. Get ready to make some life long friends :)</p>
-					</div>
-				</div>
+			<!--<div class="slides fade">-->
 
-			</div>
+				<!--<div class='slide-content'>-->
+					<!--<img src="https://drive.google.com/uc?export=download&id=1flAX8y2DCdKgsAm5apTrRcdt_sLTuw94">-->
+					<!--<h2>We help you Find BUDDIES!</h2>-->
+					<!--<p>Only posts?! NO! With our inbuilt profile search (That is if you are willing to open your profile to be public for other users to see or find-->
+						<!--. We value your privacy as much as you do, so we give you the authority to decide how you want to use YOUR data!), you can find others who have-->
+						<!--the same taste in travel experience, posts, destinations or even better - Same overlapping travel dates! Hooray!!! You might just found yourself-->
+						<!--an awsome travel buddy. Don't hesitate to connect with your potential buddies, or friend for life using our InMailing in-time online chatroom! They-->
+						<!--would also be those who are willing to make their profile public, meaning they would like to meet you as much as you would love to meet them <3-->
+					<!--</p>-->
+				<!--</div>-->
+			<!--</div>-->
 
-			<div class='about-block'>
-				<i class="fas fa-plane fa-5x"></i>
-				<h3 class="text-color-white">Travel & Awsome</h3>
-				<button class="openModal"> See what's this about </button>
-				<div class="modal">
-					<div class="modal-content">
-						<span class="modal-close">&times;</span>
-						<p class="text-color-white">Having anxiety of not knowing much about your destination of travel? Constantly feeling uneasy about traveling along without much information to guide you or your companions? After using Paddies, your questions would be -- What on earth are those things? Feel confident in your upcoming travel and have nothing but exciment for you as you are about to embark on one of your most prepared travels in a lifetime and ready to share it with others back on Paddies once you come back! Lean back, feel awsome and fly free!</p>
-					</div>
-				</div>
+			<!--<div class="slides fade">-->
 
-			</div>
-		</div>
-	</section>
+				<!--<div class='slide-content'>-->
+					<!--<img src="https://drive.google.com/uc?export=download&id=1Iaap07lqHGtjk1bz8Sqriq7ZnJb91WnV">-->
+					<!--<p>Finding info and others to travel with cannot be any easier than BACKPACKING!</p>-->
+					<!--<p>What are you waiting for? Join us to begin finding the best travel experience of a life time!</p>-->
+				<!--</div>-->
+			<!--</div>-->
 
-	<section id='sign-up'>
-		<div class='video-container'>
-			<!-- The video -->
-			<video autoplay muted loop id="myVideo">
-                <!--https://drive.google.com/uc?export=download&id=1EuYK4NwuZ13rKuAL0YKyXf2McoXhvizY-->
-			  <source src="{% static 'backpacking/Tourism.mp4' %}" type="video/mp4">
-			</video>
-
-			<!-- Optional: some overlay text to describe the video -->
-			<div class="content text-color-white">
-			  <h1>Having Fun Planning your Travel & Finding Buddies cannot be any Easier!</h1>
-			  <p>To enjoy your future journey with potential life time buddies all over the world wih just a few clicks</p>
-			  <!-- Use a button to pause/play the video with JavaScript -->
-                <a href="{% url 'user_signup_urlpattern' %}"><span id="myBtn">Sign Up</span></a>
-			</div>
-		</div>
-	</section>
-
-	<!-- <button onclick="changecolor()">changeme!</button> -->
-<!-- 	<button id="changecolor">changeme!</button> -->
-
-	<footer id="main_footer">
-		<div>
-			<i id='i1' class="fab fa-facebook-square fa-2x"></i>
-			<h4>Like Us</h4>
-		</div>
-		<div>
-			<i id='i2' class="fab fa-instagram fa-2x"></i>
-			<h4>Follow Us</h4>
-		</div>
-		<div>
-			<i id=i3' class="fab fa-twitter-square fa-2x"></i>
-			<h4>Tweet Us</h4>
-		</div>
-		<div>
-			<i class="fab fa-github-square fa-2x"></i>
-			<h4>Join Us</h4>
-		</div>
-		<p>Copyright &copy; CS411 SHP - Backpacking</p>
-	</footer>
+			<!--&lt;!&ndash; Next and previous buttons &ndash;&gt;-->
+		  <!--<a class="prev" id="leftArrow">&#10094;</a>-->
+		  <!--<a class="next" id="rightArrow">&#10095;</a>-->
 
 
+		<!--</div>-->
+	<!--</section>-->
+
+	<!--<section id='about'>-->
+		<!--<div class="about-container">-->
+			<!--<div class='about-block'>-->
+				<!--<i class="fas fa-search fa-5x"></i>-->
+				<!--<h3 class="text-color-white">Nice & Easy</h3>-->
+				<!--<button class="openModal"> See what's this about </button>-->
+				<!--<div class="modal">-->
+					<!--<div class="modal-content">-->
+						<!--<span class="modal-close">&times;</span>-->
+						<!--<p class="text-color-white">Tired of looking for travel information before leaving for your favorite distination?<br> Paddies-->
+						<!--helps users quickly filter travel posts base on user's preference to find the right post from other travelers with the-->
+						<!--same taste and interest. Paddies also indentifies users interest using AI and could give each user the best costomized-->
+					    <!--search result for any future posts one would want to read before enjoying themselves on the next best travel experience</p>-->
+					<!--</div>-->
+				<!--</div>-->
+
+			<!--</div>-->
+
+			<!--<div class='about-block'>-->
+				<!--<i class="fas fa-users fa-5x"></i>-->
+				<!--<h3 class="text-color-white">Search & Match</h3>-->
+				<!--<button class="openModal"> See what's this about </button>-->
+				<!--<div class="modal">-->
+					<!--<div class="modal-content">-->
+						<!--<span class="modal-close">&times;</span>-->
+						<!--<p class="text-color-white">Not only does Paddies make searching for travel posts more simple, accurate and precise, we also provide users the ability to get connected with on another with our built in chat. Have any questions regarding a post? Send an system direct chat to the original poster or simply leave a comment for them to reply when they have the chance. What's more, everyone could search for travel buddies based on the same interest, destination and even time of travel. Get ready to make some life long friends :)</p>-->
+					<!--</div>-->
+				<!--</div>-->
+
+			<!--</div>-->
+
+			<!--<div class='about-block'>-->
+				<!--<i class="fas fa-plane fa-5x"></i>-->
+				<!--<h3 class="text-color-white">Travel & Awsome</h3>-->
+				<!--<button class="openModal"> See what's this about </button>-->
+				<!--<div class="modal">-->
+					<!--<div class="modal-content">-->
+						<!--<span class="modal-close">&times;</span>-->
+						<!--<p class="text-color-white">Having anxiety of not knowing much about your destination of travel? Constantly feeling uneasy about traveling along without much information to guide you or your companions? After using Paddies, your questions would be &#45;&#45; What on earth are those things? Feel confident in your upcoming travel and have nothing but exciment for you as you are about to embark on one of your most prepared travels in a lifetime and ready to share it with others back on Paddies once you come back! Lean back, feel awsome and fly free!</p>-->
+					<!--</div>-->
+				<!--</div>-->
+
+			<!--</div>-->
+		<!--</div>-->
+	<!--</section>-->
+
+	<!--<section id='sign-up'>-->
+		<!--<div class='video-container'>-->
+			<!--&lt;!&ndash; The video &ndash;&gt;-->
+			<!--<video autoplay muted loop id="myVideo">-->
+                <!--&lt;!&ndash;https://drive.google.com/uc?export=download&id=1EuYK4NwuZ13rKuAL0YKyXf2McoXhvizY&ndash;&gt;-->
+			  <!--<source src="{% static 'backpacking/Tourism.mp4' %}" type="video/mp4">-->
+			<!--</video>-->
+
+			<!--&lt;!&ndash; Optional: some overlay text to describe the video &ndash;&gt;-->
+			<!--<div class="content text-color-white">-->
+			  <!--<h1>Having Fun Planning your Travel & Finding Buddies cannot be any Easier!</h1>-->
+			  <!--<p>To enjoy your future journey with potential life time buddies all over the world wih just a few clicks</p>-->
+			  <!--&lt;!&ndash; Use a button to pause/play the video with JavaScript &ndash;&gt;-->
+                <!--<a href="{% url 'user_signup_urlpattern' %}"><span id="myBtn">Sign Up</span></a>-->
+			<!--</div>-->
+		<!--</div>-->
+	<!--</section>-->
+
+	<!--&lt;!&ndash; <button onclick="changecolor()">changeme!</button> &ndash;&gt;-->
+<!--&lt;!&ndash; 	<button id="changecolor">changeme!</button> &ndash;&gt;-->
+
+	<!--<footer id="main_footer">-->
+		<!--<div>-->
+			<!--<i id='i1' class="fab fa-facebook-square fa-2x"></i>-->
+			<!--<h4>Like Us</h4>-->
+		<!--</div>-->
+		<!--<div>-->
+			<!--<i id='i2' class="fab fa-instagram fa-2x"></i>-->
+			<!--<h4>Follow Us</h4>-->
+		<!--</div>-->
+		<!--<div>-->
+			<!--<i id=i3' class="fab fa-twitter-square fa-2x"></i>-->
+			<!--<h4>Tweet Us</h4>-->
+		<!--</div>-->
+		<!--<div>-->
+			<!--<i class="fab fa-github-square fa-2x"></i>-->
+			<!--<h4>Join Us</h4>-->
+		<!--</div>-->
+		<!--<p>Copyright &copy; CS411 SHP - Backpacking</p>-->
+	<!--</footer>-->
 
 
 
 
-    <script src="{% static 'backpacking/main.js' %}" type="text/javascript"></script>
-</body>
 
-</html>
+
+    <!--<script src="{% static 'backpacking/main.js' %}" type="text/javascript"></script>-->
+<!--</body>-->
+
+<!--</html>-->

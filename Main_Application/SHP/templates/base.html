@@ -1,16 +1,6 @@
-<!--<h2>Login</h2>-->
-<!--<form method="post">-->
-  <!--{% csrf_token %}-->
-  <!--{{ form.as_p }}-->
-  <!--<button type="submit">Login</button>-->
-<!--</form>-->
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     {% load static %}
 
     <link rel = 'stylesheet' type='text/css' href="{% static 'backpacking/main.css' %}">.
@@ -20,118 +10,8 @@
     <title>MP1 Starter</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 <!--     <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script> -->
-    <style>
-
-      .emal {
-          width: 100%;
-      }
-
-      #id_email {
-          width: 100%;
-          padding: 12px 20px;
-          margin: 8px 0;
-          display: inline-block;
-          border: 1px solid #ccc;
-          box-sizing: border-box;
-      }
-
-
-      input[type=text], input[type=password] {
-          width: 100%;
-          padding: 12px 20px;
-          margin: 8px 0;
-          display: inline-block;
-          border: 1px solid #ccc;
-          box-sizing: border-box;
-      }
-
-
-      /*button {*/
-          /*background-color: #4CAF50;*/
-          /*color: white;*/
-          /*padding: 14px 20px;*/
-          /*margin: 8px 0;*/
-          /*border: none;*/
-          /*cursor: pointer;*/
-          /*width: 100%;*/
-      /*}*/
-
-      signupbutton {
-          background-color: #4CAF50;
-          color: white;
-          padding: 14px 20px;
-          margin: 8px 0;
-          border: none;
-          cursor: pointer;
-          width: 100%;
-      }
-
-
-      .cancelbtn {
-          padding: 14px 20px;
-          background-color: #f44336;
-      }
-
-
-      .cancelbtn,.signupbtn {float:left;width:50%}
-
-
-      .container {
-          padding: 16px;
-      }
-
-
-      /*.modal {*/
-          /*display: none;*/
-          /*position: fixed;*/
-          /*z-index: 1; left: 0;*/
-          /*top: 0;*/
-          /*width: 100%;*/
-          /*height: 100%;*/
-          /*overflow: auto;*/
-          /*background-color: rgb(0,0,0);*/
-          /*background-color: rgba(0,0,0,0.4);*/
-          /*padding-top: 60px;*/
-      /*}*/
-
-
-      /*.modal-content {*/
-          /*background-color: #fefefe;*/
-          /*margin: 5% auto 15% auto;*/
-          /*border: 1px solid #888;*/
-          /*width: 80%;*/
-      /*}*/
-
-
-      .close {
-          position: absolute;
-          right: 35px;
-          top: 15px;
-          color: #000;
-          font-size: 40px;
-          font-weight: bold;
-      }
-
-      .close:hover,
-      .close:focus {
-          color: red;
-          cursor: pointer;
-      }
-
-
-      .clearfix::after {
-          content: "";
-          clear: both;
-          display: table;
-      }
-
-
-      @media screen and (max-width: 300px) {
-          .cancelbtn, .signupbtn {
-             width: 100%;
-          }
-      }
-    </style>
+	{% block sytle %}
+	{% endblock %}
 </head>
 
 <body>
@@ -157,9 +37,9 @@
 			<p class="text-color-red">A place to help you schedule your trips and finding the best backpacking buddies on earth. Literally!</p>
             {% if user.is_authenticated %}
 				Hi {{ user.username }}
-				<a href="{% url 'logout' %}"><span id = "myBtn">Log OUT</span></a>
+				{% block logout_button_link %} <a href="{% url 'logout' %}"><span id = "myBtn">Log OUT</span></a> {% endblock %}
 			{% else %}
-				<span onclick="document.getElementById('id01').style.display='block'" id = "myBtn">Log In</span>
+				{% block login_button_link %} <a href="{% url 'login' %}"><span id = "myBtn">Log In</span></a> {% endblock %}
 			{% endif %}
 		</div>
 	</section>
@@ -271,44 +151,11 @@
 			  <h1>Having Fun Planning your Travel & Finding Buddies cannot be any Easier!</h1>
 			  <p>To enjoy your future journey with potential life time buddies all over the world wih just a few clicks</p>
 			  <!-- Use a button to pause/play the video with JavaScript -->
-                <a href="{% url 'user_signup_urlpattern' %}"><span id="myBtn">Sign Up</span></a>
+                {% block signup_link_button %}<a href="{% url 'user_signup_urlpattern' %}"><span id="myBtn">Sign Up</span></a>{% endblock %}
+
+				{% block signup_login_modal %}
+				{% endblock %}
 			</div>
-
-          <div style="display: block" id="id01" class="modal">
-            <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
-
-
-            <form class="animate" method='post' style="border:1px solid #ccc">
-               {% csrf_token %}
-              <div class="container">
-                <label for="uname"><b>Username</b></label>
-                {{ form.username }}
-                <label for="psw"><b>Password</b></label>
-                {{ form.password }}
-                <!--<button type="submit">Login</button>-->
-                <div class="clearfix">
-                  <button type="submit" class="signupbtn" style="background-color: #4CAF50;
-          color: white;
-          padding: 14px 20px;
-          margin: 8px 0;
-          border: none;
-          cursor: pointer;
-          width: 100%;
-		  text-align: center;">Login</button>
-				<a href="{% url 'home_urlpattern' %}"><span style="background-color: red;
-						  color: white;
-						  padding: 14px 20px;
-						  margin: 8px 0;
-						  border: none;
-						  cursor: pointer;
-						  width: 100%;
-						  text-align: center;"
-													  class="cancelbtn signupbutton">Cancel</span></a>
-                </div>
-              </div>
-            </form>
-          </div>
-
 		</div>
 	</section>
 
@@ -341,15 +188,7 @@
 
 
     <script src="{% static 'backpacking/main.js' %}" type="text/javascript"></script>
-    <script>
-
-    var modal = document.getElementById('id01');
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-    </script>
+	{% block extra_script %}{% endblock %}
 </body>
 
 </html>

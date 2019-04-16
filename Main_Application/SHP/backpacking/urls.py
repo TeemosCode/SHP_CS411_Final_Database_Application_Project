@@ -63,9 +63,9 @@ urlpatterns = [
     path('blogpost/<int:postid>/comments', ListPostComments.as_view(),
          name="list_post_comments_urlpattern"),
     path('blogpost/<int:user_id>/likes', ListUserLikes.as_view(),
-         name="list_post_comments_urlpattern"),
+         name="list_user_like_urlpattern"),
     path('comment/list/<int:user_id>', ListUserComments.as_view(),
-         name="list_comments_urlpattern"),
+         name="list_user_comments_urlpattern"),
 
     # path('travelinfo/create/<int:user_id>', CreateTravelInfo.as_view(),
     #      name="create_travelinfo_urlpattern"),

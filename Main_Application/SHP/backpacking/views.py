@@ -271,11 +271,19 @@ class ListBlogPosts(View):
 
     def get(self, request):
         with connection.cursor() as cursor:
-            fetch_user_list_query = "SELECT * FROM BlogPost;"
-            cursor.execute(fetch_user_list_query)
+            fetch_post_list_query = """
+                SELECT * FROM BlogPost P LEFT JOIN
+                (SELECT COUNT(*) AS likenum, postid AS pid FROM LikePost GROUP BY postid) T
+                ON T.pid = P.postid;
+            """
+
+            cursor.execute(fetch_post_list_query)
             rows = cursor.fetchall()
             columns = [col[0] for col in cursor.description]
             dict_ans = [dict(zip(columns, row)) for row in rows]
+            for elem in dict_ans:
+                if elem['likenum'] is None:
+                    elem['likenum'] = 0
         return JsonResponse(dict_ans, safe=False)
 
 
@@ -326,13 +334,18 @@ class ListUserBlogPosts(View):
     def get(self, request, user_id):
         with connection.cursor() as cursor:
             fetch_user_info_query = """
-                SELECT * FROM BlogPost
-                WHERE author = %s;
+                SELECT * FROM
+                (SELECT * FROM BlogPost WHERE author = %s) P LEFT JOIN 
+                (SELECT COUNT(*) AS likenum, postid AS pid FROM LikePost GROUP BY postid) T
+                ON T.pid = P.postid;
             """
             cursor.execute(fetch_user_info_query, [user_id])
             rows = cursor.fetchall()  # Tuple containing values of the row (Just values though...)
             columns = [col[0] for col in cursor.description]
             dict_ans = [dict(zip(columns, row)) for row in rows]
+            for elem in dict_ans:
+                if elem['likenum'] is None:
+                    elem['likenum'] = 0
         # Setting safe to allow JsonResponse to respond with something other than a dictionary (dict()) object
         return JsonResponse(dict_ans, safe=False)
 

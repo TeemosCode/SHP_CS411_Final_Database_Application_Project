@@ -26,14 +26,17 @@ from .views import (
     FacebookSignup, 
     FacebookLogin,
     DeleteUserTag, 
-    DeleteBlogTag)
-    
+    DeleteBlogTag,
+    Login)
+
 urlpatterns = [
     # Path for user authentication using django built-in auth app
     path('accounts/', include('django.contrib.auth.urls')),
     # Path for users
     path('', Home.as_view(), name="home_urlpattern"),
     path('signup', signup, name="user_signup_urlpattern"),
+    path('loggedin', Login.as_view(), name="user_login_urlpattern"),
+    # url(r'^login/$','django.contrib.auth.views.login', {'template_name': '/login.html'}),
     path('facebook_signup', FacebookSignup.as_view(), name="user_facebook_signup_urlpattern"),
     path('facebook_login', FacebookLogin.as_view(), name="user_facebook_login_urlpattern"),
     path('users/list', UserList.as_view(), name="user_list_urlpattern"),

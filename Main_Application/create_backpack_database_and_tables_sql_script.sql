@@ -12,7 +12,8 @@ profile_pic varchar(200),
 firstname varchar(50) DEFAULT '',
 lastname varchar(50) DEFAULT '',
 email varchar(50),
-info varchar(10000)
+info varchar(10000),
+facebook_user_id varchar(128) UNIQUE
 );
 
 create table BlogPost(
@@ -45,9 +46,10 @@ UNIQUE(tag_name, tag_type)
 );
 
 create table BlogTag(
+blogtagid int not null AUTO_INCREMENT,
 postid int not null,
 tagid int not null,
-primary key (postid, tagid),
+primary key (blogtagid),
 foreign key (postid) references BlogPost(postid)
 on delete cascade,
 foreign key (tagid) references Tag(tagid)
@@ -55,9 +57,10 @@ on delete cascade
 );
 
 create table UserTag(
+usertagid int not null AUTO_INCREMENT,
 userid int not null,
 tagid int not null,
-primary key (userid, tagid),
+primary key (usertagid),
 foreign key (userid) references BUser(userid)
 on delete cascade,
 foreign key (tagid) references Tag(tagid)
@@ -95,9 +98,10 @@ on delete cascade
 );
 
 create table LikePost(
+likeid int not null AUTO_INCREMENT,
 userid int not null,
 postid int not null,
-primary key (userid, postid),
+primary key (likeid),
 foreign key (userid) references BUser(userid)
 on delete cascade,
 foreign key (postid) references BlogPost(postid)

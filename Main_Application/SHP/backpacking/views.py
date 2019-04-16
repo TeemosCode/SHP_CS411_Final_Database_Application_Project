@@ -181,9 +181,21 @@ class UserInfo(View):
                 WHERE userid = %s;
             """
             cursor.execute(fetch_user_info_query, [pk])
-            row = cursor.fetchone()  # Tuple containing values of the row (Just values though...)
-            print(row)
-            columns = [col[0] for col in cursor.description]
+            user_info_row = cursor.fetchone()  # Tuple containing values of the row (Just values though...)
+            print(user_info_row)
+            user_info_columns = [col[0] for col in cursor.description]
+
+            fetch_user_travelinfo_query = """
+                SELECT * FROM Travelinfo
+                WHERE userid = %s;
+            """
+            cursor.execute(fetch_user_travelinfo_query, [pk])
+            user_travel_info_row = cursor.fetchone()
+            travel_info_columns = [col[0] for col in cursor.description]
+
+            columns = user_info_columns + travel_info_columns
+            row = user_info_row + user_travel_info_row
+
             dict_ans = dict(zip(columns, row))
         # Setting safe to allow JsonResponse to respond with something other than a dictionary (dict()) object
         return JsonResponse(dict_ans, safe=False)

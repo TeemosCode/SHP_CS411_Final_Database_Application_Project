@@ -265,7 +265,7 @@
                 <span onclick="document.getElementById('id01').style.display='block'" id="myBtn">Sign Up</span>
 			</div>
 
-          <div style="display: block" id="id01" class="modal">
+          <div id="id01" class="modal">
             <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
 
 
@@ -286,33 +286,21 @@
                 <div class="email">{{form.email}}</div>
 
                 <div class="clearfix">
-                  <span type="submit" class="signupbtn" style="background-color: #4CAF50;
+                  <button type="submit" class="signupbtn" style="background-color: #4CAF50;
           color: white;
           padding: 14px 20px;
           margin: 8px 0;
           border: none;
           cursor: pointer;
-          width: 100%;
-		  text-align: center;">Sign Up</span>
-                  <!--<button style="background-color: red;-->
-          <!--color: white;-->
-          <!--padding: 14px 20px;-->
-          <!--margin: 8px 0;-->
-          <!--border: none;-->
-          <!--cursor: pointer;-->
-          <!--width: 100%;"-->
-                          <!--type="submit" class="cancelbtn signupbutton" onclick="document.getElementById('id01').style.display='none'" >Cancel</button>-->
-
-
-				<a href="{% url 'home_urlpattern' %}"><span style="background-color: red;
-						  color: white;
-						  padding: 14px 20px;
-						  margin: 8px 0;
-						  border: none;
-						  cursor: pointer;
-						  width: 100%;
-						  text-align: center;"
-													  class="cancelbtn signupbutton">Cancel</span></a>
+          width: 100%;">Sign Up</button>
+                  <button style="background-color: red;
+          color: white;
+          padding: 14px 20px;
+          margin: 8px 0;
+          border: none;
+          cursor: pointer;
+          width: 100%;"
+                          type="submit" class="cancelbtn signupbutton" onclick="document.getElementById('id01').style.display='none'" >Cancel</button>
                 </div>
               </div>
             </form>

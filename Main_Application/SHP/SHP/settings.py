@@ -143,4 +143,5 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
 
 # Redirect login to React frontend url...
-LOGIN_REDIRECT_URL = "/"  # Needs change!!!
+LOGIN_REDIRECT_URL = "/login"
+LOGOUT_REDIRECT_URL = '/'

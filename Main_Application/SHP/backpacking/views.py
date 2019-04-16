@@ -155,7 +155,7 @@ class FacebookLogin(View):
     facebook provided user_id to keep the session info based on this user in our application.
     Returns json data with "userid" of our application userid in the database
     """
-    def post(self, request):
+    def get(self, request):
         with connection.cursor() as cursor:
             body = request.body.decode('utf-8')
             data = json.loads(body)

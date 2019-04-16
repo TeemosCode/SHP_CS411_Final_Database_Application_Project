@@ -143,5 +143,5 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
 
 # Redirect login to React frontend url...
-LOGIN_REDIRECT_URL = "/loggedin"
+LOGIN_REDIRECT_URL = "/loggedin"  # A self API that redirects to the front-end react app (hardcoded!)
 LOGOUT_REDIRECT_URL = '/'

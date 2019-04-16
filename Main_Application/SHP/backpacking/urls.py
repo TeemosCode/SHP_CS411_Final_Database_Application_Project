@@ -20,7 +20,7 @@ from .views import (
     DeleteLikePost,
     ListPostComments,
     ListUserComments,
-    ListUserLikes)
+    ListUserLikes, AddBlogTag, AddUserTag)
 
 urlpatterns = [
     # Path for user authentication using django built-in auth app
@@ -43,12 +43,12 @@ urlpatterns = [
          name="delete_blogpost_urlpattern"),
     path('blogpost/search/<str:search_keyword>',
          SearchBlogPost.as_view(), name="search_blogpost_urlpattern"),
-    path('blogpost/<int:postid>/likepost/<int:userid>', LikeBlogPost.as_view(),
-         name="like_blogpost_urlpattern"),
-    path('blogpost/<int:postid>/likepost/<int:userid>', DeleteLikePost.as_view(),
+
+    path('blogpost/deletelikepost', DeleteLikePost.as_view(),
          name="delete_like_blogpost_urlpattern"),
     path('blogpost/likepost', LikeBlogPost.as_view(),
          name="like_blogpost_urlpattern"),
+
     path('blogpost/<int:postid>/comments', ListPostComments.as_view(),
          name="list_post_comments_urlpattern"),
     path('blogpost/<int:user_id>/likes', ListUserLikes.as_view(),
@@ -68,4 +68,9 @@ urlpatterns = [
          name="update_comment_urlpattern"),
     path('comment/delete/<int:comment_id>', DeleteComment.as_view(),
          name="delete_comment_urlpattern"),
+
+    path('blogpost/<int:postid>/addtag', AddBlogTag.as_view(),
+         name='add_blogtag_urlpattern'),
+    path('users/<int:userid>/addtag', AddUserTag.as_view(),
+         name='add_usertag_urlpattern'),
 ]

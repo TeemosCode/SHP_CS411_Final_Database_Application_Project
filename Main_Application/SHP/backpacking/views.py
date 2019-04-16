@@ -375,7 +375,11 @@ class LikeBlogPost(View):
     #
     #     return JsonResponse(dict({"say":
     # "Created with GET cause I'm just useless at the moment since no one told me what method they will use on me...."}))
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(LikeBlogPost, self).dispatch(*args, **kwargs)
 
+    @csrf_exempt
     def post(self, request):
         with connection.cursor() as cursor:
             body = request.body.decode('utf-8')
@@ -658,3 +662,65 @@ class DeleteComment(View):
             """
             cursor.execute(delete_comment_query, [comment_id])
         return JsonResponse(dict({"Message": "deleted comment with comment_id: '%s'" % comment_id}))
+
+
+class AddBlogTag(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(AddBlogTag, self).dispatch(*args, **kwargs)
+
+    @csrf_exempt
+    def post(self, request, postid):
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        tag_name = body["tag_name"]
+        tag_type = body["tag_type"]
+
+        with connection.cursor() as cursor:
+            find_tag_query = """
+                        SELECT tagid FROM Tag WHERE tag_name = %s AND tag_type = %s;
+                    """
+
+            cursor.execute(find_tag_query, [tag_name, tag_type])
+            tagid = cursor.fetchone()
+
+            create_blogtag_query = """
+                        INSERT INTO BlogTag(tagid, postid)
+                        VALUES (%s, %s);
+                    """
+            cursor.execute(create_blogtag_query, [tagid, postid])
+
+        return JsonResponse(dict({"Message": "OK", "data": body}))
+
+
+class AddUserTag(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(AddUserTag, self).dispatch(*args, **kwargs)
+
+    @csrf_exempt
+    def post(self, request, userid):
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        tag_name = body["tag_name"]
+        tag_type = body["tag_type"]
+
+        with connection.cursor() as cursor:
+            find_tag_query = """
+                        SELECT tagid FROM Tag WHERE tag_name = %s AND tag_type = %s;
+                    """
+
+            cursor.execute(find_tag_query, [tag_name, tag_type])
+            tagid = cursor.fetchone()
+
+            create_usertag_query = """
+                        INSERT INTO UserTag(tagid, userid)
+                        VALUES (%s, %s);
+                    """
+            cursor.execute(create_usertag_query, [tagid, userid])
+
+        return JsonResponse(dict({"Message": "OK", "data": body}))
+
+

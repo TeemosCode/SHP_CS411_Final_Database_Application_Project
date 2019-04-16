@@ -34,6 +34,8 @@ class Home(View):
     def get(self, request):
         return render(request, 'backpacking/home.html')
 
+# === Users ===
+
 
 def signup(request):
     if request.method == 'POST':
@@ -86,6 +88,71 @@ def signup(request):
     return render(request, 'backpacking/sign_up.html', {'form': form})
 
 
+class FacebookSignup(View):
+
+    def post(self, request):
+        """
+        Called after a user signs up with facebook in the frontend. The frontend would provide a facebook_user_id
+        that is unique for matching whenever they log back in with facebook to be used to retrieve their information
+        """
+        with connection.cursor() as cursor:
+            body = request.body.decode('utf-8')
+            data = json.loads(body)
+            facebook_user_id = data['user_id']  # How is the frontend going to pass the info in?
+
+            email = data["email"]  # .....!!!!! About to pass in fb user's email? MUST NEED IN THIS SCHEMA
+
+
+            insert_new_facebook_user_query = """
+                INSERT INTO BUser (facebook_user_id, email)
+                VALUES (%s, %s);
+            """
+            cursor.execute(insert_new_facebook_user_query, [facebook_user_id, email])
+
+            # Initialize the user travel info table
+            get_facebook_created_userid_query = """
+                                SELECT userid FROM BUser
+                                WHERE facebook_user_id = %s;
+                            """
+            cursor.execute(get_facebook_created_userid_query, [facebook_user_id])
+            row = cursor.fetchone()  # row of size one with just the userid
+
+            initialize_user_travelInfo_query = """
+                                INSERT INTO Travelinfo (userid) 
+                                VALUES (%s);
+                            """
+            cursor.execute(initialize_user_travelInfo_query, [row[0]])
+            return JsonResponse(dict(
+                {
+                    "Message": "User 'userid ({})' signed up with facebook".format(row[0]),
+                    "data": row[0]
+                }
+            ))
+
+
+class FacebookLogin(View):
+    """
+    Called when user logs in with facebook through the frontend. It retrieves the corresponding userid with the
+    facebook provided user_id to keep the session info based on this user in our application.
+    Returns json data with "userid" of our application userid in the database
+    """
+    def post(self, request):
+        with connection.cursor() as cursor:
+            body = request.body.decode('utf-8')
+            data = json.loads(body)
+            facebook_user_id = data['user_id']
+
+            get_userid_from_facebook_query = """
+                SELECT userid FROM BUser
+                WHERE facebook_user_id = %s;
+            """
+            cursor.execute(get_userid_from_facebook_query, [facebook_user_id])
+            row = cursor.fetchone()
+            return JsonResponse(dict({
+                "data": row[0]
+            }))
+
+
 class UserList(View):
     """Get the total list of current users"""
 
@@ -114,9 +181,21 @@ class UserInfo(View):
                 WHERE userid = %s;
             """
             cursor.execute(fetch_user_info_query, [pk])
-            row = cursor.fetchone()  # Tuple containing values of the row (Just values though...)
-            print(row)
-            columns = [col[0] for col in cursor.description]
+            user_info_row = cursor.fetchone()  # Tuple containing values of the row (Just values though...)
+            print(user_info_row)
+            user_info_columns = [col[0] for col in cursor.description]
+
+            fetch_user_travelinfo_query = """
+                SELECT * FROM Travelinfo
+                WHERE userid = %s;
+            """
+            cursor.execute(fetch_user_travelinfo_query, [pk])
+            user_travel_info_row = cursor.fetchone()
+            travel_info_columns = [col[0] for col in cursor.description]
+
+            columns = user_info_columns + travel_info_columns
+            row = user_info_row + user_travel_info_row
+
             dict_ans = dict(zip(columns, row))
         # Setting safe to allow JsonResponse to respond with something other than a dictionary (dict()) object
         return JsonResponse(dict_ans, safe=False)

@@ -26,7 +26,8 @@ from .views import (
     FacebookSignup, 
     FacebookLogin,
     DeleteUserTag, 
-    DeleteBlogTag)
+    DeleteBlogTag,
+    Login)
 
 urlpatterns = [
     # Path for user authentication using django built-in auth app

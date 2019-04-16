@@ -294,12 +294,12 @@ a {
 	padding: 0;
 	margin:0 auto;
 	list-style-type: none;
-	/*background-color: #333;*/
+	background-color: #333;
 	background-color: rgba(0,0,0,0.35);
 	width: 5%;
 	color: white;
 	text-align: center;
-	/*padding: 14px 16px;*/
+	padding: 14px 16px;
 	display: block;
 	text-decoration: none;
 	border-radius: 15px ;

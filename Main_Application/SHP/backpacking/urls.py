@@ -22,10 +22,8 @@ from .views import (
     ListUserComments,
     ListUserLikes,
     AddBlogTag,
-    AddUserTag, 
     FacebookSignup, 
     FacebookLogin,
-    DeleteUserTag, 
     DeleteBlogTag,
     Login)
 
@@ -84,8 +82,5 @@ urlpatterns = [
          name='add_blogtag_urlpattern'),
     path('blogpost/<int:postid>/deletetag', DeleteBlogTag.as_view(),
          name='add_blogtag_urlpattern'),
-    path('users/<int:userid>/addtag', AddUserTag.as_view(),
-         name='add_usertag_urlpattern'),
-    path('users/<int:userid>/deletetag', DeleteUserTag.as_view(),
-         name='add_usertag_urlpattern'),
+
 ]

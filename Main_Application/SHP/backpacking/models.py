@@ -49,7 +49,7 @@ class Blogpost(models.Model):
 class Blogtag(models.Model):
     blogtagid = models.AutoField(primary_key=True)
     postid = models.ForeignKey(Blogpost, models.DO_NOTHING, db_column='postid')
-    tagid = models.ForeignKey('Tag', models.DO_NOTHING, db_column='tagid')
+    tag = models.CharField(max_length=100)
 
     class Meta:
         managed = False
@@ -79,17 +79,6 @@ class Likepost(models.Model):
         db_table = 'LikePost'
 
 
-class Tag(models.Model):
-    tagid = models.AutoField(primary_key=True)
-    tag_name = models.CharField(max_length=50)
-    tag_type = models.CharField(max_length=50)
-
-    class Meta:
-        managed = False
-        db_table = 'Tag'
-        unique_together = (('tag_name', 'tag_type'),)
-
-
 class Travelinfo(models.Model):
     travelinfo_id = models.AutoField(primary_key=True)
     activity = models.CharField(max_length=200, blank=True, null=True)
@@ -103,16 +92,6 @@ class Travelinfo(models.Model):
     class Meta:
         managed = False
         db_table = 'Travelinfo'
-
-
-class Usertag(models.Model):
-    usertagid = models.AutoField(primary_key=True)
-    userid = models.ForeignKey(Buser, models.DO_NOTHING, db_column='userid')
-    tagid = models.ForeignKey(Tag, models.DO_NOTHING, db_column='tagid')
-
-    class Meta:
-        managed = False
-        db_table = 'UserTag'
 
 
 class AuthGroup(models.Model):

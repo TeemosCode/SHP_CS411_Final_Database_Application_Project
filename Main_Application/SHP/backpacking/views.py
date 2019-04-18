@@ -270,18 +270,24 @@ class ListBlogPosts(View):
     def get(self, request):
         with connection.cursor() as cursor:
             fetch_post_list_query = """
-                SELECT * FROM BlogPost P LEFT JOIN
+                SELECT * FROM
+                (SELECT * FROM BlogPost P LEFT JOIN
                 (SELECT COUNT(*) AS likenum, postid AS pid FROM LikePost GROUP BY postid) T
-                ON T.pid = P.postid;
+                ON T.pid = P.postid) T2 LEFT JOIN 
+                (SELECT GROUP_CONCAT(tag) AS tags, postid AS pid1 FROM BlogTag GROUP BY postid) T1
+                ON T2.postid = T1.pid1;
             """
 
             cursor.execute(fetch_post_list_query)
             rows = cursor.fetchall()
             columns = [col[0] for col in cursor.description]
             dict_ans = [dict(zip(columns, row)) for row in rows]
+
             for elem in dict_ans:
                 if elem['likenum'] is None:
                     elem['likenum'] = 0
+                if elem['tags'] is None:
+                    elem['tags'] = ""
         return JsonResponse(dict_ans, safe=False)
 
 
@@ -333,9 +339,11 @@ class ListUserBlogPosts(View):
         with connection.cursor() as cursor:
             fetch_user_info_query = """
                 SELECT * FROM
-                (SELECT * FROM BlogPost WHERE author = %s) P LEFT JOIN 
+                (SELECT * FROM (SELECT * FROM BlogPost WHERE author = %s) P LEFT JOIN 
                 (SELECT COUNT(*) AS likenum, postid AS pid FROM LikePost GROUP BY postid) T
-                ON T.pid = P.postid;
+                ON T.pid = P.postid) T2 LEFT JOIN 
+                (SELECT GROUP_CONCAT(tag) AS tags, postid AS pid1 FROM BlogTag GROUP BY postid) T1
+                ON T2.postid = T1.pid1;
             """
             cursor.execute(fetch_user_info_query, [user_id])
             rows = cursor.fetchall()  # Tuple containing values of the row (Just values though...)
@@ -344,6 +352,8 @@ class ListUserBlogPosts(View):
             for elem in dict_ans:
                 if elem['likenum'] is None:
                     elem['likenum'] = 0
+                if elem['tags'] is None:
+                    elem['tags'] = ""
         # Setting safe to allow JsonResponse to respond with something other than a dictionary (dict()) object
         return JsonResponse(dict_ans, safe=False)
 

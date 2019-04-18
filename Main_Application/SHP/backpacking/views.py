@@ -82,7 +82,7 @@ def signup(request):
             user = authenticate(username=username, password=raw_password)
 
             login(request, user)
-            return redirect('home_urlpattern')
+            return redirect('user_login_urlpattern')
     else:
         form = SignUpForm()
     return render(request, 'backpacking/sign_up.html', {'form': form})

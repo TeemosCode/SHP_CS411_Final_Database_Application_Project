@@ -36,6 +36,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'https://backpack-ing.herokuapp.com/']
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'backpacking',
     'corsheaders',
+    'chat',
+
 ]
 
 MIDDLEWARE = [
@@ -77,6 +80,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'SHP.wsgi.application'
+
+ASGI_APPLICATION = "SHP.routing.application"
+# Channels
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
 
 
 # Database
@@ -145,3 +160,4 @@ CORS_ALLOW_CREDENTIALS = False
 # Redirect login to React frontend url...
 LOGIN_REDIRECT_URL = "/loggedin"  # A self API that redirects to the front-end react app (hardcoded!)
 LOGOUT_REDIRECT_URL = '/'
+

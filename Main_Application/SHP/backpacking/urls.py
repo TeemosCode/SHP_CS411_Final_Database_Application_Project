@@ -36,7 +36,7 @@ urlpatterns = [
     path('loggedin', Login.as_view(), name="user_login_urlpattern"),
     # url(r'^login/$','django.contrib.auth.views.login', {'template_name': '/login.html'}),
     path('facebook_signup', FacebookSignup.as_view(), name="user_facebook_signup_urlpattern"),
-    path('facebook_login', FacebookLogin.as_view(), name="user_facebook_login_urlpattern"),
+    path('facebook_login/<int:user_id>', FacebookLogin.as_view(), name="user_facebook_login_urlpattern"),
     path('users/list', UserList.as_view(), name="user_list_urlpattern"),
     path('users/<int:pk>', UserInfo.as_view(), name="user_info_urlpattern"),
     # Path for blogpost

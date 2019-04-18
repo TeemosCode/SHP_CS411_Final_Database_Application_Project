@@ -118,15 +118,15 @@ class FacebookSignup(View):
             body = request.body.decode('utf-8')
             data = json.loads(body)
             facebook_user_id = data['user_id']  # How is the frontend going to pass the info in?
-
-            email = data["email"]  # .....!!!!! About to pass in fb user's email? MUST NEED IN THIS SCHEMA
-
+            username = data['name']
+            email = data['email']  # .....!!!!! About to pass in fb user's email? MUST NEED IN THIS SCHEMA
+            profile_pic = data['profile_pic']
 
             insert_new_facebook_user_query = """
-                INSERT INTO BUser (facebook_user_id, email)
-                VALUES (%s, %s);
+                INSERT INTO BUser (facebook_user_id, username, email, profile_pic)
+                VALUES (%s, %s, %s, %s);
             """
-            cursor.execute(insert_new_facebook_user_query, [facebook_user_id, email])
+            cursor.execute(insert_new_facebook_user_query, [facebook_user_id, username, email, profile_pic])
 
             # Initialize the user travel info table
             get_facebook_created_userid_query = """
@@ -155,11 +155,9 @@ class FacebookLogin(View):
     facebook provided user_id to keep the session info based on this user in our application.
     Returns json data with "userid" of our application userid in the database
     """
-    def get(self, request):
+    def get(self, request, user_id):
         with connection.cursor() as cursor:
-            body = request.body.decode('utf-8')
-            data = json.loads(body)
-            facebook_user_id = data['user_id']
+            facebook_user_id = user_id
 
             get_userid_from_facebook_query = """
                 SELECT userid FROM BUser
@@ -168,7 +166,7 @@ class FacebookLogin(View):
             cursor.execute(get_userid_from_facebook_query, [facebook_user_id])
             row = cursor.fetchone()
             return JsonResponse(dict({
-                "data": row[0]
+                "data": row[0] if row else None
             }))
 
 

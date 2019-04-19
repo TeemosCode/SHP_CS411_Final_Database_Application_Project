@@ -25,7 +25,10 @@ from .views import (
     FacebookSignup,
     FacebookLogin,
     DeleteBlogTag,
-    Login, ConnectUsers)
+    Login,
+    RecommendPosts,
+    ConnectUsers
+    )
 
 urlpatterns = [
     # Path for user authentication using django built-in auth app
@@ -39,6 +42,7 @@ urlpatterns = [
     path('facebook_login/<int:user_id>', FacebookLogin.as_view(), name="user_facebook_login_urlpattern"),
     path('users/list', UserList.as_view(), name="user_list_urlpattern"),
     path('users/<int:pk>', UserInfo.as_view(), name="user_info_urlpattern"),
+    path('users/recommendpost/<int:user_id>', RecommendPosts.as_view(), name="user_recommend_posts"),
     # Path for blogpost
     path('blogpost/create', CreateBlogPost.as_view(),
          name="create_blogpost_urlpattern"),

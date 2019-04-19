@@ -8,6 +8,8 @@ from django.views import View
 from django.http import JsonResponse, HttpResponse
 from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
+from .recommend_post import get_recommendations_post
+from operator import itemgetter
 
 """
 actions: (High level queries/posts/updates CRUD)
@@ -538,48 +540,6 @@ class DeleteLikePost(View):
         return JsonResponse(dict({"Message": "deleted like"}))
 
 
-# class CreateTravelInfo(View):
-
-#     @method_decorator(csrf_exempt)
-#     def dispatch(self, *args, **kwargs):
-#         return super(CreateTravelInfo, self).dispatch(*args, **kwargs)
-
-#     def get(self, requestk, user_id):
-#         with connection.cursor() as cursor:
-#             fetch_user_info_query = """
-#                 SELECT * FROM Travelinfo
-#                 WHERE userid = %s
-#             """
-#             cursor.execute(fetch_user_info_query, [user_id])
-#             row = cursor.fetchall()
-
-#             columns = [col[0] for col in cursor.description]
-#             dict_ans = dict(zip(columns, row))
-
-#         return JsonResponse(dict({"message": dict_ans}))
-
-#     @csrf_exempt
-#     def post(self, request, user_id):
-#         body_unicode = request.body.decode('utf-8')
-#         body = json.loads(body_unicode)
-#         activity = body["activity"]
-#         budgetmax = body["budgetmax"]
-#         budgetmin = body["budgetmin"]
-#         destination = body["destination"]
-#         starttime = body["starttime"]
-#         endtime = body["endtime"]
-
-#         with connection.cursor() as cursor:
-#             create_travel_info = """
-#             INSERT INTO Travelinfo(activity, budgetmax, budgetmin, destination, starttime, endtime, userid)
-#             VALUES(%s, %s, %s, %s, %s, %s, %s)
-#             """
-#             cursor.execute(create_travel_info, [
-#                 activity, budgetmax, budgetmin, destination, starttime, endtime, user_id])
-
-#         return JsonResponse(dict({"Message": "OK", "data": body}))
-
-
 class UpdateTravelInfo(View):
 
     @method_decorator(csrf_exempt)
@@ -950,3 +910,29 @@ class ConnectUsers(View):
 
         # Setting safe to allow JsonResponse to respond with something other than a dictionary (dict()) object
         return JsonResponse(relations, safe=False)
+
+
+class RecommendPosts(View):
+    def get(self, request, user_id):
+        with connection.cursor() as cursor:
+            fetch_user_likes_query = """
+                SELECT postid FROM Likepost
+                WHERE userid = %s
+            """
+            cursor.execute(fetch_user_likes_query, [user_id])
+            rows = cursor.fetchall()
+            if len(rows) == 0:
+                return JsonResponse(dict({"Message": "Current user does not have any like posts, please add posts you like and then we can recommend posts"}), status=500)
+            # columns = [col[0] for col in cursor.description]
+            # dict_ans = [dict(zip(columns, row)) for row in rows]
+            dict = {}
+            for row in rows:
+                postid_list = get_recommendations_post(row[0])
+                for postid in postid_list:
+                    if postid[0] in dict:
+                        dict[postid[0]] += postid[1]
+                    else:
+                        dict[postid[0]] = postid[1]
+
+        return JsonResponse(sorted(dict.items(), key=itemgetter(1)), safe=False)
+

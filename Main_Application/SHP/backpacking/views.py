@@ -8,6 +8,8 @@ from django.views import View
 from django.http import JsonResponse, HttpResponse
 from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
+from .recommend_post import get_recommendations_post
+from operator import itemgetter
 
 """
 actions: (High level queries/posts/updates CRUD)
@@ -118,15 +120,15 @@ class FacebookSignup(View):
             body = request.body.decode('utf-8')
             data = json.loads(body)
             facebook_user_id = data['user_id']  # How is the frontend going to pass the info in?
-
-            email = data["email"]  # .....!!!!! About to pass in fb user's email? MUST NEED IN THIS SCHEMA
-
+            username = data['name']
+            email = data['email']  # .....!!!!! About to pass in fb user's email? MUST NEED IN THIS SCHEMA
+            profile_pic = data['profile_pic']
 
             insert_new_facebook_user_query = """
-                INSERT INTO BUser (facebook_user_id, email)
-                VALUES (%s, %s);
+                INSERT INTO BUser (facebook_user_id, username, email, profile_pic)
+                VALUES (%s, %s, %s, %s);
             """
-            cursor.execute(insert_new_facebook_user_query, [facebook_user_id, email])
+            cursor.execute(insert_new_facebook_user_query, [facebook_user_id, username, email, profile_pic])
 
             # Initialize the user travel info table
             get_facebook_created_userid_query = """
@@ -155,11 +157,9 @@ class FacebookLogin(View):
     facebook provided user_id to keep the session info based on this user in our application.
     Returns json data with "userid" of our application userid in the database
     """
-    def get(self, request):
+    def get(self, request, user_id):
         with connection.cursor() as cursor:
-            body = request.body.decode('utf-8')
-            data = json.loads(body)
-            facebook_user_id = data['user_id']
+            facebook_user_id = user_id
 
             get_userid_from_facebook_query = """
                 SELECT userid FROM BUser
@@ -168,7 +168,7 @@ class FacebookLogin(View):
             cursor.execute(get_userid_from_facebook_query, [facebook_user_id])
             row = cursor.fetchone()
             return JsonResponse(dict({
-                "data": row[0]
+                "data": row[0] if row else None
             }))
 
 
@@ -271,11 +271,25 @@ class ListBlogPosts(View):
 
     def get(self, request):
         with connection.cursor() as cursor:
-            fetch_user_list_query = "SELECT * FROM BlogPost;"
-            cursor.execute(fetch_user_list_query)
+            fetch_post_list_query = """
+                SELECT * FROM
+                (SELECT * FROM BlogPost P LEFT JOIN
+                (SELECT COUNT(*) AS likenum, postid AS pid FROM LikePost GROUP BY postid) T
+                ON T.pid = P.postid) T2 LEFT JOIN 
+                (SELECT GROUP_CONCAT(tag) AS tags, postid AS pid1 FROM BlogTag GROUP BY postid) T1
+                ON T2.postid = T1.pid1;
+            """
+
+            cursor.execute(fetch_post_list_query)
             rows = cursor.fetchall()
             columns = [col[0] for col in cursor.description]
             dict_ans = [dict(zip(columns, row)) for row in rows]
+
+            for elem in dict_ans:
+                if elem['likenum'] is None:
+                    elem['likenum'] = 0
+                if elem['tags'] is None:
+                    elem['tags'] = ""
         return JsonResponse(dict_ans, safe=False)
 
 
@@ -326,13 +340,22 @@ class ListUserBlogPosts(View):
     def get(self, request, user_id):
         with connection.cursor() as cursor:
             fetch_user_info_query = """
-                SELECT * FROM BlogPost
-                WHERE author = %s;
+                SELECT * FROM
+                (SELECT * FROM (SELECT * FROM BlogPost WHERE author = %s) P LEFT JOIN 
+                (SELECT COUNT(*) AS likenum, postid AS pid FROM LikePost GROUP BY postid) T
+                ON T.pid = P.postid) T2 LEFT JOIN 
+                (SELECT GROUP_CONCAT(tag) AS tags, postid AS pid1 FROM BlogTag GROUP BY postid) T1
+                ON T2.postid = T1.pid1;
             """
             cursor.execute(fetch_user_info_query, [user_id])
             rows = cursor.fetchall()  # Tuple containing values of the row (Just values though...)
             columns = [col[0] for col in cursor.description]
             dict_ans = [dict(zip(columns, row)) for row in rows]
+            for elem in dict_ans:
+                if elem['likenum'] is None:
+                    elem['likenum'] = 0
+                if elem['tags'] is None:
+                    elem['tags'] = ""
         # Setting safe to allow JsonResponse to respond with something other than a dictionary (dict()) object
         return JsonResponse(dict_ans, safe=False)
 
@@ -515,48 +538,6 @@ class DeleteLikePost(View):
             except:
                 return JsonResponse(dict({"Message": "fail to delete like"}), status=500)
         return JsonResponse(dict({"Message": "deleted like"}))
-
-
-# class CreateTravelInfo(View):
-
-#     @method_decorator(csrf_exempt)
-#     def dispatch(self, *args, **kwargs):
-#         return super(CreateTravelInfo, self).dispatch(*args, **kwargs)
-
-#     def get(self, requestk, user_id):
-#         with connection.cursor() as cursor:
-#             fetch_user_info_query = """
-#                 SELECT * FROM Travelinfo
-#                 WHERE userid = %s
-#             """
-#             cursor.execute(fetch_user_info_query, [user_id])
-#             row = cursor.fetchall()
-
-#             columns = [col[0] for col in cursor.description]
-#             dict_ans = dict(zip(columns, row))
-
-#         return JsonResponse(dict({"message": dict_ans}))
-
-#     @csrf_exempt
-#     def post(self, request, user_id):
-#         body_unicode = request.body.decode('utf-8')
-#         body = json.loads(body_unicode)
-#         activity = body["activity"]
-#         budgetmax = body["budgetmax"]
-#         budgetmin = body["budgetmin"]
-#         destination = body["destination"]
-#         starttime = body["starttime"]
-#         endtime = body["endtime"]
-
-#         with connection.cursor() as cursor:
-#             create_travel_info = """
-#             INSERT INTO Travelinfo(activity, budgetmax, budgetmin, destination, starttime, endtime, userid)
-#             VALUES(%s, %s, %s, %s, %s, %s, %s)
-#             """
-#             cursor.execute(create_travel_info, [
-#                 activity, budgetmax, budgetmin, destination, starttime, endtime, user_id])
-
-#         return JsonResponse(dict({"Message": "OK", "data": body}))
 
 
 class UpdateTravelInfo(View):
@@ -767,22 +748,14 @@ class AddBlogTag(View):
     def post(self, request, postid):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
-        tag_name = body["tag_name"]
-        tag_type = body["tag_type"]
+        tag = body["tag"]
 
         with connection.cursor() as cursor:
-            find_tag_query = """
-                        SELECT tagid FROM Tag WHERE tag_name = %s AND tag_type = %s;
-                    """
-
-            cursor.execute(find_tag_query, [tag_name, tag_type])
-            tagid = cursor.fetchone()
-
             create_blogtag_query = """
-                        INSERT INTO BlogTag(tagid, postid)
+                        INSERT INTO BlogTag(tag, postid)
                         VALUES (%s, %s);
                     """
-            cursor.execute(create_blogtag_query, [tagid, postid])
+            cursor.execute(create_blogtag_query, [tag, postid])
 
         return JsonResponse(dict({"Message": "OK", "data": body}))
 
@@ -798,84 +771,168 @@ class DeleteBlogTag(View):
         with connection.cursor() as cursor:
             body_unicode = request.body.decode('utf-8')
             body = json.loads(body_unicode)
-            tag_name = body["tag_name"]
-            tag_type = body["tag_type"]
-
-            find_tag_query = """
-                SELECT tagid FROM Tag WHERE tag_name = %s AND tag_type = %s;
-            """
-
-            cursor.execute(find_tag_query, [tag_name, tag_type])
-            tagid = cursor.fetchone()
+            tag = body["tag"]
 
             fetch_user_info_query = """
                 DELETE FROM BlogTag
-                WHERE postid = %s AND tagid = %s
+                WHERE postid = %s AND tag = %s
             """
             try:
-                cursor.execute(fetch_user_info_query, [postid, tagid])
+                cursor.execute(fetch_user_info_query, [postid, tag])
             except:
                 return JsonResponse(dict({"Message": "fail to delete blogtag"}), status=500)
         return JsonResponse(dict({"Message": "deleted blogtag"}))
 
 
-class AddUserTag(View):
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, *args, **kwargs):
-        return super(AddUserTag, self).dispatch(*args, **kwargs)
-
-    @csrf_exempt
-    def post(self, request, userid):
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        tag_name = body["tag_name"]
-        tag_type = body["tag_type"]
-
+class ConnectUsers(View):
+    def get(self, request, userid):
         with connection.cursor() as cursor:
-            find_tag_query = """
-                        SELECT tagid FROM Tag WHERE tag_name = %s AND tag_type = %s;
-                    """
+            fetch_user_likes_query = """
+                SELECT author AS likes, COUNT(postid) AS likes_count FROM BlogPost WHERE postid in
+                (SELECT postid FROM LikePost WHERE userid = %s) GROUP BY likes;
+            """
+            cursor.execute(fetch_user_likes_query, [userid])
+            likes_rows = cursor.fetchall()  # Tuple containing values of the row (Just values though...)
+            likes_columns = [col[0] for col in cursor.description]
+            likes_dict = [dict(zip(likes_columns, row)) for row in likes_rows]
 
-            cursor.execute(find_tag_query, [tag_name, tag_type])
-            tagid = cursor.fetchone()
+            fetch_user_liked_query = """
+                SELECT T2.userid AS liked, COUNT(*) AS liked_count FROM
+                (SELECT postid FROM BlogPost WHERE author = %s) T1 JOIN
+                (SELECT * FROM LikePost) T2 ON T1.postid = T2.postid GROUP BY liked;
+            """
+            cursor.execute(fetch_user_liked_query, [userid])
+            liked_rows = cursor.fetchall()  # Tuple containing values of the row (Just values though...)
+            liked_columns = [col[0] for col in cursor.description]
+            liked_dict = [dict(zip(liked_columns, row)) for row in liked_rows]
 
-            create_usertag_query = """
-                        INSERT INTO UserTag(tagid, userid)
-                        VALUES (%s, %s);
-                    """
-            cursor.execute(create_usertag_query, [tagid, userid])
+            fetch_user_travel_query = """
+                            SELECT destination, budgetMax, budgetMin 
+                            FROM Travelinfo WHERE userid = %s;
+                        """
+            cursor.execute(fetch_user_travel_query, [userid])
+            travel_info = cursor.fetchone()
 
-        return JsonResponse(dict({"Message": "OK", "data": body}))
+            similar_travel = []
+            if travel_info is None:
+                pass
+            else:
+                fetch_similar_travel_query = """
+                                SELECT userid as similar_traveller FROM Travelinfo 
+                                WHERE destination = %s AND 
+                                budgetMax BETWEEN %s AND %s AND
+                                budgetMin BETWEEN %s AND %s;
+                            """
+                cursor.execute(fetch_similar_travel_query, [travel_info[0], travel_info[1] - 200, travel_info[1] + 200,
+                                                            travel_info[2] - 200, travel_info[2] + 200])
+
+                travel_rows = cursor.fetchall()
+                travel_columns = [col[0] for col in cursor.description]
+
+                similar_travel = [dict(zip(travel_columns, row)) for row in travel_rows]
+
+            fetch_user_comment_query = """
+                            SELECT author AS comment_on, COUNT(*) AS commenton_count FROM BlogPost WHERE postid IN 
+                            (SELECT postid FROM Comment WHERE userid = %s) GROUP BY comment_on;
+                        """
+            cursor.execute(fetch_user_comment_query, [userid])
+            commenton_rows = cursor.fetchall()
+            commenton_columns = [col[0] for col in cursor.description]
+            commenton_dict = [dict(zip(commenton_columns, row)) for row in commenton_rows]
+
+            fetch_user_comment_query = """
+                            SELECT T2.userid AS comment_from, COUNT(*) AS commentfrom_count FROM
+                            (SELECT postid FROM BlogPost WHERE author = %s) T1 JOIN
+                            (SELECT * FROM Comment) T2 ON T1.postid = T2.postid GROUP BY comment_from;
+                        """
+            cursor.execute(fetch_user_comment_query, [userid])
+            commentfrom_rows = cursor.fetchall()  # Tuple containing values of the row (Just values though...)
+            commentfrom_columns = [col[0] for col in cursor.description]
+            commentfrom_dict = [dict(zip(commentfrom_columns, row)) for row in commentfrom_rows]
+
+            relations = {}
+
+            for person in likes_dict:
+                try:
+                    tmp = relations[person['likes']]
+                except:
+                    relations[person['likes']] = {}
+
+                try:
+                    relations[person['likes']]['likes'] += person['likes_count']
+                except:
+                    relations[person['likes']]['likes'] = person['likes_count']
+
+            for person in liked_dict:
+                try:
+                    tmp = relations[person['liked']]
+                except:
+                    relations[person['liked']] = {}
+
+                try:
+                    relations[person['liked']]['liked'] += person['liked_count']
+                except:
+                    relations[person['liked']]['liked'] = person['liked_count']
+
+            for person in similar_travel:
+
+                try:
+                    tmp = relations[person['similar_traveller']]
+                except:
+                    relations[person['similar_traveller']] = {}
+
+                # try:
+                #     relations[person['similar_traveller']] += ',similar_travel'
+
+                relations[person['similar_traveller']]['similar_traveller'] = 1
+
+            for person in commenton_dict:
+                try:
+                    tmp = relations[person['comment_on']]
+                except:
+                    relations[person['comment_on']] = {}
+                try:
+                    relations[person['comment_on']]['comment_on'] += person['commenton_count']
+                except:
+                    relations[person['comment_on']]['comment_on'] = person['commenton_count']
+
+            for person in commentfrom_dict:
+                try:
+                    tmp = relations[person['comment_from']]
+                except:
+                    relations[person['comment_from']] = {}
+                try:
+                    relations[person['comment_from']]['comment_from'] += person['commentfrom_count']
+                except:
+                    relations[person['comment_from']]['comment_from'] = person['commentfrom_count']
+
+            del relations[userid]
+
+        # Setting safe to allow JsonResponse to respond with something other than a dictionary (dict()) object
+        return JsonResponse(relations, safe=False)
 
 
-class DeleteUserTag(View):
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, *args, **kwargs):
-        return super(DeleteUserTag, self).dispatch(*args, **kwargs)
-
-    @csrf_exempt
-    def post(self, request, userid):
+class RecommendPosts(View):
+    def get(self, request, user_id):
         with connection.cursor() as cursor:
-            body_unicode = request.body.decode('utf-8')
-            body = json.loads(body_unicode)
-            tag_name = body["tag_name"]
-            tag_type = body["tag_type"]
-
-            find_tag_query = """
-                SELECT tagid FROM Tag WHERE tag_name = %s AND tag_type = %s;
+            fetch_user_likes_query = """
+                SELECT postid FROM Likepost
+                WHERE userid = %s
             """
+            cursor.execute(fetch_user_likes_query, [user_id])
+            rows = cursor.fetchall()
+            if len(rows) == 0:
+                return JsonResponse(dict({"Message": "Current user does not have any like posts, please add posts you like and then we can recommend posts"}), status=500)
+            # columns = [col[0] for col in cursor.description]
+            # dict_ans = [dict(zip(columns, row)) for row in rows]
+            dict = {}
+            for row in rows:
+                postid_list = get_recommendations_post(row[0])
+                for postid in postid_list:
+                    if postid[0] in dict:
+                        dict[postid[0]] += postid[1]
+                    else:
+                        dict[postid[0]] = postid[1]
 
-            cursor.execute(find_tag_query, [tag_name, tag_type])
-            tagid = cursor.fetchone()
+        return JsonResponse(sorted(dict.items(), key=itemgetter(1)), safe=False)
 
-            fetch_user_info_query = """
-                DELETE FROM UserTag
-                WHERE userid = %s AND tagid = %s
-            """
-            try:
-                cursor.execute(fetch_user_info_query, [userid, tagid])
-            except:
-                return JsonResponse(dict({"Message": "fail to delete usertag"}), status=500)
-        return JsonResponse(dict({"Message": "deleted usertag"}))

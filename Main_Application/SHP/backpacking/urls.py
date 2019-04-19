@@ -22,12 +22,13 @@ from .views import (
     ListUserComments,
     ListUserLikes,
     AddBlogTag,
-    AddUserTag, 
-    FacebookSignup, 
+    FacebookSignup,
     FacebookLogin,
-    DeleteUserTag, 
     DeleteBlogTag,
-    Login)
+    Login,
+    RecommendPosts,
+    ConnectUsers
+    )
 
 urlpatterns = [
     # Path for user authentication using django built-in auth app
@@ -38,9 +39,10 @@ urlpatterns = [
     path('loggedin', Login.as_view(), name="user_login_urlpattern"),
     # url(r'^login/$','django.contrib.auth.views.login', {'template_name': '/login.html'}),
     path('facebook_signup', FacebookSignup.as_view(), name="user_facebook_signup_urlpattern"),
-    path('facebook_login', FacebookLogin.as_view(), name="user_facebook_login_urlpattern"),
+    path('facebook_login/<int:user_id>', FacebookLogin.as_view(), name="user_facebook_login_urlpattern"),
     path('users/list', UserList.as_view(), name="user_list_urlpattern"),
     path('users/<int:pk>', UserInfo.as_view(), name="user_info_urlpattern"),
+    path('users/recommendpost/<int:user_id>', RecommendPosts.as_view(), name="user_recommend_posts"),
     # Path for blogpost
     path('blogpost/create', CreateBlogPost.as_view(),
          name="create_blogpost_urlpattern"),
@@ -63,9 +65,9 @@ urlpatterns = [
     path('blogpost/<int:postid>/comments', ListPostComments.as_view(),
          name="list_post_comments_urlpattern"),
     path('blogpost/<int:user_id>/likes', ListUserLikes.as_view(),
-         name="list_post_comments_urlpattern"),
+         name="list_user_like_urlpattern"),
     path('comment/list/<int:user_id>', ListUserComments.as_view(),
-         name="list_comments_urlpattern"),
+         name="list_user_comments_urlpattern"),
 
     # path('travelinfo/create/<int:user_id>', CreateTravelInfo.as_view(),
     #      name="create_travelinfo_urlpattern"),
@@ -83,9 +85,8 @@ urlpatterns = [
     path('blogpost/<int:postid>/addtag', AddBlogTag.as_view(),
          name='add_blogtag_urlpattern'),
     path('blogpost/<int:postid>/deletetag', DeleteBlogTag.as_view(),
-         name='add_blogtag_urlpattern'),
-    path('users/<int:userid>/addtag', AddUserTag.as_view(),
-         name='add_usertag_urlpattern'),
-    path('users/<int:userid>/deletetag', DeleteUserTag.as_view(),
-         name='add_usertag_urlpattern'),
+         name='delete_blogtag_urlpattern'),
+    path('user/<int:userid>/relations', ConnectUsers.as_view(),
+         name='user_relatioins_urlpattern'),
+
 ]

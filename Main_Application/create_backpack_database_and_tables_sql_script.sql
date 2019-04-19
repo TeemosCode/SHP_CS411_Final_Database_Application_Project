@@ -37,33 +37,12 @@ foreign key (postid) references BlogPost(postid)
 on delete cascade
 );
 
-create table Tag(
-tagid int not null AUTO_INCREMENT,
-primary key (tagid),
-tag_name varchar(50) NOT NULL,
-tag_type varchar(50) NOT NULL,
-UNIQUE(tag_name, tag_type)
-);
-
 create table BlogTag(
 blogtagid int not null AUTO_INCREMENT,
 postid int not null,
-tagid int not null,
+tag varchar(100) not null,
 primary key (blogtagid),
 foreign key (postid) references BlogPost(postid)
-on delete cascade,
-foreign key (tagid) references Tag(tagid)
-on delete cascade
-);
-
-create table UserTag(
-usertagid int not null AUTO_INCREMENT,
-userid int not null,
-tagid int not null,
-primary key (usertagid),
-foreign key (userid) references BUser(userid)
-on delete cascade,
-foreign key (tagid) references Tag(tagid)
 on delete cascade
 );
 

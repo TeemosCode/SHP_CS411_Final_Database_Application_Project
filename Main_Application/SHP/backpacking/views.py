@@ -784,6 +784,134 @@ class DeleteBlogTag(View):
         return JsonResponse(dict({"Message": "deleted blogtag"}))
 
 
+class ConnectUsers(View):
+    def get(self, request, userid):
+        with connection.cursor() as cursor:
+            fetch_user_likes_query = """
+                SELECT author AS likes, COUNT(postid) AS likes_count FROM BlogPost WHERE postid in
+                (SELECT postid FROM LikePost WHERE userid = %s) GROUP BY likes;
+            """
+            cursor.execute(fetch_user_likes_query, [userid])
+            likes_rows = cursor.fetchall()  # Tuple containing values of the row (Just values though...)
+            likes_columns = [col[0] for col in cursor.description]
+            likes_dict = [dict(zip(likes_columns, row)) for row in likes_rows]
+
+            fetch_user_liked_query = """
+                SELECT T2.userid AS liked, COUNT(*) AS liked_count FROM
+                (SELECT postid FROM BlogPost WHERE author = %s) T1 JOIN
+                (SELECT * FROM LikePost) T2 ON T1.postid = T2.postid GROUP BY liked;
+            """
+            cursor.execute(fetch_user_liked_query, [userid])
+            liked_rows = cursor.fetchall()  # Tuple containing values of the row (Just values though...)
+            liked_columns = [col[0] for col in cursor.description]
+            liked_dict = [dict(zip(liked_columns, row)) for row in liked_rows]
+
+            fetch_user_travel_query = """
+                            SELECT destination, budgetMax, budgetMin 
+                            FROM Travelinfo WHERE userid = %s;
+                        """
+            cursor.execute(fetch_user_travel_query, [userid])
+            travel_info = cursor.fetchone()
+
+            similar_travel = []
+            if travel_info is None:
+                pass
+            else:
+                fetch_similar_travel_query = """
+                                SELECT userid as similar_traveller FROM Travelinfo 
+                                WHERE destination = %s AND 
+                                budgetMax BETWEEN %s AND %s AND
+                                budgetMin BETWEEN %s AND %s;
+                            """
+                cursor.execute(fetch_similar_travel_query, [travel_info[0], travel_info[1] - 200, travel_info[1] + 200,
+                                                            travel_info[2] - 200, travel_info[2] + 200])
+
+                travel_rows = cursor.fetchall()
+                travel_columns = [col[0] for col in cursor.description]
+
+                similar_travel = [dict(zip(travel_columns, row)) for row in travel_rows]
+
+            fetch_user_comment_query = """
+                            SELECT author AS comment_on, COUNT(*) AS commenton_count FROM BlogPost WHERE postid IN 
+                            (SELECT postid FROM Comment WHERE userid = %s) GROUP BY comment_on;
+                        """
+            cursor.execute(fetch_user_comment_query, [userid])
+            commenton_rows = cursor.fetchall()
+            commenton_columns = [col[0] for col in cursor.description]
+            commenton_dict = [dict(zip(commenton_columns, row)) for row in commenton_rows]
+
+            fetch_user_comment_query = """
+                            SELECT T2.userid AS comment_from, COUNT(*) AS commentfrom_count FROM
+                            (SELECT postid FROM BlogPost WHERE author = %s) T1 JOIN
+                            (SELECT * FROM Comment) T2 ON T1.postid = T2.postid GROUP BY comment_from;
+                        """
+            cursor.execute(fetch_user_comment_query, [userid])
+            commentfrom_rows = cursor.fetchall()  # Tuple containing values of the row (Just values though...)
+            commentfrom_columns = [col[0] for col in cursor.description]
+            commentfrom_dict = [dict(zip(commentfrom_columns, row)) for row in commentfrom_rows]
+
+            relations = {}
+
+            for person in likes_dict:
+                try:
+                    tmp = relations[person['likes']]
+                except:
+                    relations[person['likes']] = {}
+
+                try:
+                    relations[person['likes']]['likes'] += person['likes_count']
+                except:
+                    relations[person['likes']]['likes'] = person['likes_count']
+
+            for person in liked_dict:
+                try:
+                    tmp = relations[person['liked']]
+                except:
+                    relations[person['liked']] = {}
+
+                try:
+                    relations[person['liked']]['liked'] += person['liked_count']
+                except:
+                    relations[person['liked']]['liked'] = person['liked_count']
+
+            for person in similar_travel:
+
+                try:
+                    tmp = relations[person['similar_traveller']]
+                except:
+                    relations[person['similar_traveller']] = {}
+
+                # try:
+                #     relations[person['similar_traveller']] += ',similar_travel'
+
+                relations[person['similar_traveller']]['similar_traveller'] = 1
+
+            for person in commenton_dict:
+                try:
+                    tmp = relations[person['comment_on']]
+                except:
+                    relations[person['comment_on']] = {}
+                try:
+                    relations[person['comment_on']]['comment_on'] += person['commenton_count']
+                except:
+                    relations[person['comment_on']]['comment_on'] = person['commenton_count']
+
+            for person in commentfrom_dict:
+                try:
+                    tmp = relations[person['comment_from']]
+                except:
+                    relations[person['comment_from']] = {}
+                try:
+                    relations[person['comment_from']]['comment_from'] += person['commentfrom_count']
+                except:
+                    relations[person['comment_from']]['comment_from'] = person['commentfrom_count']
+
+            del relations[userid]
+
+        # Setting safe to allow JsonResponse to respond with something other than a dictionary (dict()) object
+        return JsonResponse(relations, safe=False)
+
+
 class RecommendPosts(View):
     def get(self, request, user_id):
         with connection.cursor() as cursor:
@@ -807,4 +935,4 @@ class RecommendPosts(View):
                         dict[postid[0]] = postid[1]
 
         return JsonResponse(sorted(dict.items(), key=itemgetter(1)), safe=False)
-        
+

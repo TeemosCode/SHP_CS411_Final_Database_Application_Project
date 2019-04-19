@@ -83,8 +83,9 @@ HTTP POST /chat/privateChat 500 [0.05, 127.0.0.1:59802]
             'room_name_json': mark_safe(chatroom_id),
             'chatroom_id': mark_safe(chatroom_id),
             'username': mark_safe(user_data_dict['username']),
+            'user_fb_img': user_data_dict['profile_pic']
         }
         print(user_id, send_to_user_id)
 
         # return HttpResponse("Hello WOrld!!")
-        return render(request, 'chat/room.html', content)
+        return render(request, 'chat/room1.html', content)

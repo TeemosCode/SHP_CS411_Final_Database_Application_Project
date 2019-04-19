@@ -30,7 +30,7 @@ HTTP POST /chat/privateChat 500 [0.05, 127.0.0.1:59802]
 ??!!!!!!!
     """
     # Purely for testing locally manually
-    def get(self, request, sendto_id, sender_id):
+    def get(self, request, sender_id, sendto_id):
         # user1, user2 = room_name.split('_')
         user_id = int(sendto_id)  # the one who initiated this chat
         print("==============SENDER==============:   ", user_id)
@@ -63,13 +63,22 @@ HTTP POST /chat/privateChat 500 [0.05, 127.0.0.1:59802]
             columns = [col[0] for col in cursor.description]
             user_data_dict = dict(zip(columns, row))
 
+            get_send_to_user_id_info_query = """
+                SELECT * FROM BUser WHERE userid = %s;
+            """
+            cursor.execute(get_send_to_user_id_info_query, [send_to_user_id])
+            row = cursor.fetchone()
+            columns = [col[0] for col in cursor.description]
+            send_to_user_data_dict = dict(zip(columns, row))
+
 
         content = {
             'room_name_json': mark_safe(chatroom_id),
             'chatroom_id': mark_safe(chatroom_id),
             'username': str(user_data_dict['username']),
             'user_id': mark_safe(user_id),
-            'user_fb_img': mark_safe(user_data_dict['profile_pic'])
+            'user_fb_img': mark_safe(user_data_dict['profile_pic']),
+            'send_to_user_fb_img': mark_safe(send_to_user_data_dict['profile_pic'])
         }
         print(user_id, send_to_user_id)
 

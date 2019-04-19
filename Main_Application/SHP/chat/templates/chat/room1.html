@@ -183,12 +183,13 @@
       var imgTag = document.createElement('img');
       var pTag = document.createElement('p');
       pTag.textContent = data.content;
-      imgTag.src = {{ user_fb_img }};
 
       if (author === username) {
         msgListTag.className = 'sent';
+        imgTag.src = '{{ user_fb_img }}';
       } else {
         msgListTag.className = 'replies';
+        imgTag.src = '{{ send_to_user_fb_img }}';
       }
       msgListTag.appendChild(imgTag);
       msgListTag.appendChild(pTag);

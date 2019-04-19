@@ -35,20 +35,25 @@ class ChatConsumer(WebsocketConsumer):
 
             cursor.execute(get_all_historical_chat_ascending_query, [chatroom_id])
             chat_history_rows = cursor.fetchall()
+            print(chat_history_rows)
 
             get_chatroom_user_names_query = """
                 SELECT B.userid, B.username, B2.userid, B2.username
                 FROM PrivateChatRoom AS P 
                 JOIN BUser AS B ON P.member1id = B.userid 
-                JOIN BUser AS B2 ON P.member2id = B2.userid;
+                JOIN BUser AS B2 ON P.member2id = B2.userid
+                WHERE chatroomid = %s;
             """
-            cursor.execute(get_chatroom_user_names_query)
+
+            cursor.execute(get_chatroom_user_names_query, [chatroom_id])
             chatroom_id_to_username = cursor.fetchone()
+            print(chatroom_id_to_username, "AHAHAHAHAHAHAHAHAH")
             userid_to_username_map = {
                 chatroom_id_to_username[0]: chatroom_id_to_username[1],
                 chatroom_id_to_username[2]: chatroom_id_to_username[3]
             }
-            # print(chat_history_rows)
+            print(userid_to_username_map)
+            print(chat_history_rows)
             new_chat_history_rows = list()
             for row in chat_history_rows:
                 row_list = list(row)

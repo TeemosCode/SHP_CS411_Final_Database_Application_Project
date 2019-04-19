@@ -80,6 +80,7 @@ HTTP POST /chat/privateChat 500 [0.05, 127.0.0.1:59802]
 
 
         content = {
+            'room_name_json': mark_safe(chatroom_id),
             'chatroom_id': mark_safe(chatroom_id),
             'username': mark_safe(user_data_dict['username']),
         }

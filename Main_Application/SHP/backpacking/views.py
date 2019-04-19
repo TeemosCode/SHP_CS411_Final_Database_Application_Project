@@ -925,14 +925,27 @@ class RecommendPosts(View):
                 return JsonResponse(dict({"Message": "Current user does not have any like posts, please add posts you like and then we can recommend posts"}), status=500)
             # columns = [col[0] for col in cursor.description]
             # dict_ans = [dict(zip(columns, row)) for row in rows]
-            dict = {}
-            for row in rows:
-                postid_list = get_recommendations_post(row[0])
-                for postid in postid_list:
-                    if postid[0] in dict:
-                        dict[postid[0]] += postid[1]
-                    else:
-                        dict[postid[0]] = postid[1]
+            res = {}
 
-        return JsonResponse(sorted(dict.items(), key=itemgetter(1)), safe=False)
+            fetch_posts = """
+                SELECT * FROM blogpost
+            """
+            cursor.execute(fetch_posts, [])
+            blogs = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            print(blogs, columns)
+            blogdict = [dict(zip(columns, row)) for row in blogs]
+
+
+            for row in rows:
+                postid_list = get_recommendations_post(blogdict, row[0])
+                for postid in postid_list:
+                    if postid[0] in map(lambda x: x[0], rows):
+                        continue
+                    if postid[0] in res:
+                        res[postid[0]] += postid[1]
+                    else:
+                        res[postid[0]] = postid[1]
+
+        return JsonResponse(sorted(res.items(), key=itemgetter(1)), safe=False)
 

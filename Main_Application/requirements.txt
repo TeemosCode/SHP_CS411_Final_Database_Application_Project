@@ -6,7 +6,7 @@ crayons==0.2.0
 Django==2.1.2
 django-cors-headers==2.5.2
 idna==2.8
-mysql-connector==2.1.6
+mysql-connector-python==8.0.15
 mysqlclient==1.4.2.post1
 pytz==2018.9
 selenium==3.141.0

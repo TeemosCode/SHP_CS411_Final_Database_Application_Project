@@ -35,7 +35,7 @@ class Metrics:
         res = 0
         for i in range(len(x)):
             res += x[i] * y[i]
-        return res / denox / denoy
+        return res / denox / denoy if denox!=0 and denoy!=0 else 0
 
     @staticmethod
     # mimic two pass union algorithm

@@ -568,10 +568,10 @@ body {
   font-size: 0.9em;
 }
 #frame .content .messages ul li:nth-last-child(1) {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 #frame .content .messages ul li.sent img {
-  margin: 6px 8px 0 0;
+  margin: 16px 8px 0 0;
 }
 #frame .content .messages ul li.sent p {
   background: #435f7a;
@@ -608,6 +608,7 @@ body {
   bottom: 0;
   width: 100%;
   z-index: 99;
+  height: 30px;
 }
 #frame .content .message-input .wrap {
   position: relative;
@@ -617,13 +618,13 @@ body {
   float: left;
   border: none;
   width: calc(100% - 50px);
-  padding: 11px 32px 10px 8px;
+  padding: 10px 32px 10px 8px;
   font-size: 1.8em;
   color: #32465a;
 }
 @media screen and (max-width: 735px) {
   #frame .content .message-input .wrap input {
-    padding: 15px 32px 16px 8px;
+    padding: 10px 10px 10px 8px;
   }
 }
 #frame .content .message-input .wrap input:focus {
@@ -633,7 +634,7 @@ body {
   position: absolute;
   right: 60px;
   z-index: 4;
-  margin-top: 10px;
+  margin-top: 0px;
   font-size: 1.8em;
   color: #435f7a;
   opacity: .5;
@@ -641,7 +642,7 @@ body {
 }
 @media screen and (max-width: 735px) {
   #frame .content .message-input .wrap .attachment {
-    margin-top: 19px;
+    margin-top: 0px;
     right: 65px;
   }
 }

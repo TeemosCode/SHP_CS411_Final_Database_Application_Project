@@ -87,9 +87,6 @@ User = get_user_model()
 
 
 # chat/consumers.py
-from asgiref.sync import async_to_sync
-from channels.generic.websocket import WebsocketConsumer
-import json
 
 class ChatConsumer(WebsocketConsumer):
 

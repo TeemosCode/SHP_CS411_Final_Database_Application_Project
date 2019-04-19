@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-User = get_user_model()
+User = get_user_model()  # Default user <--- Change this later?
 
 class Message(models.Model):
     author = models.ForeignKey(User, related_name='author_messages', on_delete=models.CASCADE)
@@ -12,4 +12,6 @@ class Message(models.Model):
         return self.author.username
 
     def last_10_messages():
-        return Message.objects.order_by('-timestamp').all()[:10]
+        result = list(Message.objects.order_by('-timestamp').all())  # Return the ALL historical messages
+        result.reverse()
+        return result

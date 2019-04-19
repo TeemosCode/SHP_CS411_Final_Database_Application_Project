@@ -87,3 +87,23 @@ foreign key (postid) references BlogPost(postid)
 on delete cascade
 );
 
+CREATE TABLE PrivateChatRoom(
+chatroomid varchar(128),  -- a string used for referencing and linking url to the corresponding chatroom
+PRIMARY KEY (chatroomid),
+member1id int not null,
+member2id int not null,
+createdtime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (member1id) REFERENCES BUser(userid)
+ON DELETE CASCADE,
+FOREIGN KEY (member2id) REFERENCES BUser(userid)
+ON DELETE CASCADE
+);
+
+CREATE TABLE PrivateChatHistory (
+chatroomid VARCHAR(128),
+senderid INT NOT NULL,
+messagetime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+messagecontext TEXT,
+FOREIGN KEY (chatroomid) REFERENCES PrivateChatRoom(chatroomid),
+FOREIGN KEY (senderid) REFERENCES BUser(userid)
+);

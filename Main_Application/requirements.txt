@@ -65,3 +65,6 @@ Werkzeug==0.15.2
 xlrd==1.0.0
 xlwt==1.2.0
 zope.interface==4.6.0
+scipy==1.2.1
+pandas==0.24.2
+pymysql==0.9.3

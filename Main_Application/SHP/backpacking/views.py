@@ -933,7 +933,6 @@ class RecommendPosts(View):
             cursor.execute(fetch_posts, [])
             blogs = cursor.fetchall()
             columns = [col[0] for col in cursor.description]
-            print(blogs, columns)
             blogdict = [dict(zip(columns, row)) for row in blogs]
 
 

@@ -30,7 +30,7 @@ SECRET_KEY = 'greh=8dd-op1&elh2$^aypp(9rqcud^xbrbd2d*o6pxdt$j#)*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'https://backpack-ing.herokuapp.com/']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'https://backpack-ing.herokuapp.com/']
 
 
 # Application definition

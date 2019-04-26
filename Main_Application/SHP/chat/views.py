@@ -32,9 +32,9 @@ HTTP POST /chat/privateChat 500 [0.05, 127.0.0.1:59802]
     # Purely for testing locally manually
     def get(self, request, sender_id, sendto_id):
         # user1, user2 = room_name.split('_')
-        user_id = int(sendto_id)  # the one who initiated this chat
+        user_id = int(sender_id)  # the one who initiated this chat
         print("==============SENDER==============:   ", user_id)
-        send_to_user_id = int(sender_id)
+        send_to_user_id = int(sendto_id)
         print("==============SEND TOOOOOO==============:   ", send_to_user_id)
         # first of, need to create the chatroomID based on both user's ID and for linking to private room url using it.
         # Get both user's id, sort them in a list, then concatenate into a string.

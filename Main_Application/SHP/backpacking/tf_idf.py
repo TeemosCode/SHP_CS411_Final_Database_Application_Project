@@ -1,4 +1,5 @@
 from math import log10
+from functools import reduce
 
 stop_words = set("""
 a
@@ -125,6 +126,7 @@ def tf(wordDict, wordLength):
 
 def idf(docDicts):
     idfDict = dict.fromkeys(docDicts[0].keys(), 0)
+
     for doc in docDicts:
         for word, val in doc.items():
             if val:
@@ -140,12 +142,24 @@ def idf(docDicts):
 
 def tf_idf(tf_res, idf_res):
     res = {}
-    for word, val in tf_res.items():
-        res[word] = val * idf_res[word]
+    for word, val in idf_res.items():
+        res[word] = tf_res.get(word,0) * idf_res[word]
     return res
 
 
-def tf_idf_process(docA, docB):
+def getIDFs(docs):
+    words = list(map(preprocess, docs))
+    word_set = set()
+    for w in words:
+        word_set = word_set.union(set(w))
+    res_list = []
+    for w in words:
+        map_dict = mapWords(w, word_set)
+        res_list.append(map_dict)
+    # res_list = list(map(lambda x:mapWords(x,word_set), words))
+    return idf(res_list)
+
+def tf_idf_process(docA, docB, idfs=None):
     wordA = preprocess(docA)
     wordB = preprocess(docB)
     wordSet = set(wordA).union(set(wordB))
@@ -153,7 +167,8 @@ def tf_idf_process(docA, docB):
     wordDictB = mapWords(wordB, wordSet)
     tfA = tf(wordDictA, len(wordA))
     tfB = tf(wordDictB, len(wordB))
-    idfs = idf([wordDictA, wordDictB])
+    if idfs is None:
+        idfs = idf([wordDictA, wordDictB])
     resA = tf_idf(tfA, idfs)
     resB = tf_idf(tfB, idfs)
     return resA, resB

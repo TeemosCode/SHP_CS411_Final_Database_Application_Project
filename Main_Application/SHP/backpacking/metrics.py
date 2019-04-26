@@ -53,3 +53,12 @@ class Metrics:
                 intersection.add(i)
         return 1. * len(intersection) / len(union)
 
+    @staticmethod
+    def customized(x, y):
+        res = 0
+        for i in range(len(x)):
+            if (x[i] and y[i]):
+                res += min(x[i],y[i])
+            else:
+                res -= max(x[i],y[i])/10.
+        return -res
